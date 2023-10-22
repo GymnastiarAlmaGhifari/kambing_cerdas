@@ -1,6 +1,6 @@
 "use client"
 
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 import Image from "next/image";
 import Link from "next/link";
@@ -21,9 +21,12 @@ const Leftsidebar: FC<LeftsidebarProps> = ({ }) => {
     const router = useRouter();
     const pathname = usePathname();
 
+
+
+
     // const { userId } = useAuth();
     return (
-        <section className='custom-scrollbar leftsidebar'>
+        <section className='custom-scrollbar leftsidebar greens-gradient dark:darks-gradient'>
             <div className='flex w-full flex-1 flex-col gap-6 px-6'>
                 {sidebarLinks.map((link) => {
                     const isActive =
@@ -31,15 +34,14 @@ const Leftsidebar: FC<LeftsidebarProps> = ({ }) => {
                         pathname === link.route;
 
                     // if (link.route === "/profile") link.route = `${link.route}/${userId}`;
-
                     return (
                         <Link
                             href={link.route}
                             key={link.label}
-                            className={`leftsidebar_link ${isActive && "bg-primary-500 "}`}
+                            className={`leftsidebar_link ${isActive && "bg-[#01C577] dark:bg-red-500"}`}
                         >
                             <Image
-                                src={link.imgURL}
+                                src={link.imgUrl}
                                 alt={link.label}
                                 width={24}
                                 height={24}

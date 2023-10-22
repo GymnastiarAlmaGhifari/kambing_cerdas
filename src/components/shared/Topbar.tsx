@@ -3,6 +3,7 @@
 import { FC } from 'react'
 import Image from "next/image";
 import Link from "next/link";
+import { ModeToggle } from '../common/ThemeSetting';
 
 
 interface TopbarProps {
@@ -11,14 +12,16 @@ interface TopbarProps {
 
 const Topbar: FC<TopbarProps> = ({ }) => {
     return (
-        <nav className='topbar'>
+        <nav className='topbar '>
             <Link href='/dashboard' className='flex items-center gap-4'>
                 <Image src='/logo.svg' alt='logo' width={28} height={28} />
                 <p className='text-heading3-bold text-light-1 max-xs:hidden'>Kambing Cerdas</p>
             </Link>
 
+            <ModeToggle />
             <div className='flex items-center gap-1'>
                 <div className='block md:hidden'>
+
                     {/* <SignedIn>
                         <SignOutButton>
                             <div className='flex cursor-pointer'>

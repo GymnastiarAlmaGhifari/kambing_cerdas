@@ -70,6 +70,7 @@ export const CreateKandangModal = () => {
         onSuccess: () => {
             queryClient.invalidateQueries(["kandang"]);
             form.reset();
+
             onClose();
         },
         onError: (error) => {
@@ -81,6 +82,8 @@ export const CreateKandangModal = () => {
         try {
             await addKandang(values); // Trigger the mutation using addKandang
             // The mutation will be handled by useMutation's onSuccess and onError callbacks
+            // jika kadang suc
+
         } catch (error) {
             console.error("Submission error:", error);
         }

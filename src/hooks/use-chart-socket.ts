@@ -14,6 +14,28 @@ export const useChartSocket = ({ addKey, updateKey, queryKey }: SensorSocketProp
   const { socket } = useSocket();
   const queryClient = useQueryClient();
 
+  function showNotification(title: string, options: NotificationOptions) {
+    if (Notification.permission === "granted") {
+      const notification = new Notification(title, options);
+    }
+  }
+
+  // Di dalam fungsi yang dipanggil saat event "addKey" dari WebSocket muncul
+  useEffect(() => {
+    if (socket) {
+      const handleAddKey = (sensorData: Sensor) => {
+        // Tampilkan notifikasi saat ada data baru dari WebSocket
+        showNotification("Data Sensor Baru", { body: `Temperatur: ${sensorData.temperature}°C` });
+      };
+
+      socket.on(addKey, handleAddKey);
+
+      return () => {
+        socket.off(addKey, handleAddKey);
+      };
+    }
+  }, [socket, addKey]);
+
   useEffect(() => {
     if (!socket) {
       return;
@@ -28,7 +50,7 @@ export const useChartSocket = ({ addKey, updateKey, queryKey }: SensorSocketProp
         const newData = oldData.pages.map((page: any) => {
           return {
             ...page,
-            items: page.items.map((item: Sensor) => {
+            sensorData: page.sensorData.map((item: Sensor) => {
               if (item.id === sensorData.id) {
                 return sensorData;
               }
@@ -50,7 +72,7 @@ export const useChartSocket = ({ addKey, updateKey, queryKey }: SensorSocketProp
           return {
             pages: [
               {
-                items: [sensorData],
+                sensorData: [sensorData],
               },
             ],
           };
@@ -58,11 +80,14 @@ export const useChartSocket = ({ addKey, updateKey, queryKey }: SensorSocketProp
 
         const newData = [...oldData.pages];
 
-        newData[0] = {
-          ...newData[0],
-          items: [sensorData, ...newData[0].items],
-        };
-
+        if (newData[0].sensorData && Array.isArray(newData[0].sensorData)) {
+          newData[0] = {
+            ...newData[0],
+            sensorData: [sensorData, ...newData[0].sensorData],
+          };
+        } else {
+          newData[0].sensorData = [sensorData];
+        }
         return {
           ...oldData,
           pages: newData,
@@ -71,8 +96,10 @@ export const useChartSocket = ({ addKey, updateKey, queryKey }: SensorSocketProp
     });
 
     return () => {
+      if (updateKey) {
+        socket.off(updateKey);
+      }
       socket.off(addKey);
-      socket.off(updateKey);
     };
   }, [queryClient, addKey, queryKey, socket, updateKey]);
 };

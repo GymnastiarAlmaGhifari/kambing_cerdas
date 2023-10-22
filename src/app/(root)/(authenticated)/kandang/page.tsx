@@ -22,13 +22,12 @@ const Kandang = () => {
 
 
     return (
-        <div className="">
+        <>
+            <h1 className='head-text text-left '>Kandang</h1>
 
             <button className='text-white' onClick={() => onOpen("createKandang")}>Open Modal</button>
 
-            <div>
-
-
+            <section className='mt-9 flex  md:flex-row flex-wrap gap-10 '>
                 {isLoading ? (
                     <p className='text-white'>Loading...</p>
                 ) : isError ? (
@@ -42,8 +41,8 @@ const Kandang = () => {
                         />
                     ))
                 )}
-            </div>
-        </div>
+            </section>
+        </ >
 
     );
 };

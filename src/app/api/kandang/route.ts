@@ -26,7 +26,7 @@ export async function POST(req: Request) {
 
   // With the file data in the buffer, you can do whatever you want with it.
   // For this, we'll just write it to the filesystem in a new location
-  const path = join(process.cwd(), "public", "images", "kandang", namaFile);
+  const path = join(process.cwd(), "/images/kandang", namaFile);
 
   try {
     await writeFile(path, buffer);
@@ -35,7 +35,8 @@ export async function POST(req: Request) {
     const kandang = await db.kandang.create({
       data: {
         nama_kandang,
-        gambar_kandang: `/images/kandang/${namaFile}`,
+        // gambar_kandang: `/images/kandang/${namaFile}`,
+        gambar_kandang: namaFile,
       },
     });
 

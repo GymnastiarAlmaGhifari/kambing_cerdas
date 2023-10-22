@@ -2,7 +2,6 @@ import { FC, ReactNode } from 'react';
 import '@/styles/globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import Navbar from '@/components/shared/Navbar';
 import '@/styles/globals.css';
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
@@ -14,6 +13,8 @@ import Rightsidebar from '@/components/shared/Rightsidebar';
 import Bottombar from '@/components/shared/Bottombar';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { ModalProvider } from '@/components/providers/modal-provider';
+import Notifikasi from '@/components/shared/Notifikasi';
+import { ThemeProvider } from '@/components/providers/theme-provider';
 
 
 const inter = Inter({ subsets: ['latin'] });
@@ -32,28 +33,40 @@ const AuthenticatedLayout: FC<AuthenticatedLayoutProps> = async ({ children }) =
     const session = await getServerSession(authOptions)
 
     // jika tidak ada session arahkan ke page /
+    const apiUrl = '/api/notif'
 
 
     return (
         <Provider session={session}>
             <html lang='en'>
                 <body className={inter.className}>
-                    <Topbar />
-                    <main className='flex flex-row'>
-                        <Leftsidebar />
-                        <section className='main-container'>
-                            <div className='w-full max-w-4xl'>
-                                <SocketProvider>
-                                    <QueryProvider>
-                                        <ModalProvider />
-                                        {children}
-                                    </QueryProvider>
-                                </SocketProvider>
-                            </div>
-                        </section>
-                        {/* <Rightsidebar /> */}
-                    </main>
-                    <Bottombar />
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="dark"
+                        enableSystem={false}
+                        disableTransitionOnChange
+                    // storageKey="discord-theme"
+                    >
+                        <Topbar />
+                        <main className='flex flex-row'>
+                            <Leftsidebar />
+                            <section className='main-container'>
+                                <div className='w-full '>
+                                    <SocketProvider>
+                                        <QueryProvider>
+                                            <Notifikasi
+                                                apiUrl={apiUrl}
+                                            />
+                                            <ModalProvider />
+                                            {children}
+                                        </QueryProvider>
+                                    </SocketProvider>
+                                </div>
+                            </section>
+                            {/* <Rightsidebar /> */}
+                        </main>
+                        <Bottombar />
+                    </ThemeProvider>
                 </body>
             </html>
         </Provider>
@@ -61,9 +74,3 @@ const AuthenticatedLayout: FC<AuthenticatedLayoutProps> = async ({ children }) =
 };
 
 export default AuthenticatedLayout;
-
-
-
-
-
-

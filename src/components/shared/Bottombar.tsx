@@ -31,7 +31,7 @@ const Bottombar: FC<BottombarProps> = ({ }) => {
               className={`bottombar_link ${isActive && "bg-primary-500"}`}
             >
               <Image
-                src={link.imgURL}
+                src={link.imgUrl}
                 alt={link.label}
                 width={16}
                 height={16}

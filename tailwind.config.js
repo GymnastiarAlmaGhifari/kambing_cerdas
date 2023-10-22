@@ -197,10 +197,15 @@ module.exports = {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
+        gradient: {
+          DEFAULT: "hsl(var(--gradient))",
+          foreground: "hsl(var(--gradient-foreground))",
+        },
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+
         "primary-500": "#877EFF",
         "secondary-500": "#FFB620",
         blue: "#0095F6",
@@ -215,6 +220,8 @@ module.exports = {
         "light-3": "#7878A3",
         "light-4": "#5C5C7B",
         "gray-1": "#697C89",
+        "green-1": "#00A762",
+        "green-2": "#00492C",
         glassmorphism: "rgba(16, 16, 18, 0.60)",
       },
       boxShadow: {
@@ -242,6 +249,13 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      backgroundImage: {
+        "green-gradient": "linear-gradient(90.13deg, #00a762 30%, #00492c 100.5%)",
+        "green-gradient-hover": "linear-gradient(90.13deg, #01C577 30%, #01C577 100.5%)",
+        "dark-gradient": "linear-gradient(90deg,  #101012 30%, #121417 90%)",
+        "red-gradient-500": "linear-gradient(90deg, #FF5A5A 30%, #FF5A5A 90%)",
+        "red-gradient-500-hover": "linear-gradient(90deg, #FF5A5A 30%, #FF5A5A 90%)",
       },
     },
   },

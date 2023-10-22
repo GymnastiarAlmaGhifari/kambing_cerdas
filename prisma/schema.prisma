@@ -177,3 +177,11 @@ model Dht22 {
   updatedAt    DateTime @updatedAt
   @@map("dht22")
 }
+
+// notifications
+model notifications {
+  id_notifications           String   @id @default(cuid())
+  message_notifications String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
