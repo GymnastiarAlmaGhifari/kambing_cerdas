@@ -81,7 +81,7 @@
   /* main */
   .main-container {
     @apply flex min-h-screen flex-1 flex-col items-start 
-    bg-gray-400 dark:bg-dark-1
+    bg-neutral-300/90 dark:bg-dark-1
 
     px-6 pb-10 pt-28 max-md:pb-32 sm:px-10;
   }

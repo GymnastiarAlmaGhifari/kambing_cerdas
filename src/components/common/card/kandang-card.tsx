@@ -52,12 +52,16 @@ const KandangCard: FC<KandangCardProps> = ({ item }) => {
                         </div>
                     </div>
                     <div className="flex justify-center items-center w-full mt-4">
-                        <Button
-                            variant={'themeMode'}
-                            size={'default'}
+                        <Link
+                            href={`/kandang/${item.id_kandang}`}
                         >
-                            oawkowakwoakawokaw
-                        </Button>
+                            <Button
+                                variant={'themeMode'}
+                                size={'default'}
+                            >
+                                Masuk
+                            </Button>
+                        </Link>
                     </div>
                     {/* <Image
                         width={100}

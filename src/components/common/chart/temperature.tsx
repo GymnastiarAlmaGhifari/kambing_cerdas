@@ -37,7 +37,6 @@ export const Temperature = ({
         x: item.createdAt,
         y: item.temperature,
     }));
-    const reversedData = formattedData.reverse();
 
 
     return (
@@ -63,7 +62,7 @@ export const Temperature = ({
                     {/* buatkan AreaChartContainer dengan data item.Temperature dan item.createAt */}
 
 
-                    <AreaChartContainer data={reversedData} size={{ height: 300, width: 400 }} />
+                    <AreaChartContainer data={formattedData.reverse()} size={{ height: 300, width: 400 }} />
 
 
                 </div>
