@@ -1,10 +1,12 @@
-import { Kandang, Sensor } from "@prisma/client";
+import { Kandang, Sensor, Kambing, notifications } from "@prisma/client";
 import { create } from "zustand";
 
-export type ModalType = "createKandang" | "createKambing" | "createSensor" | "editKandang";
+export type ModalType = "createKandang" | "createKambing" | "createSensor" | "editKandang" | "createNotif";
 
 interface ModalData {
+  notif?: notifications;
   kandang?: Kandang;
+  kambing?: Kambing;
   sensor?: Sensor;
   apiUrl?: string;
   query?: Record<string, any>;

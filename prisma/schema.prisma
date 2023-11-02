@@ -89,27 +89,44 @@ model Sensor {
   @@map("sensors")
 }
 
-// model kambing 
 model Kambing {
   id_kambing           String   @id @default(cuid())
   nama_kambing        String
+  gambar_kambing      String?
   jenis_kambing       String?
-
   jenis_kelamin       String?
   tanggal_lahir       DateTime?
   bobot               Float?
   status              status?
-  rfid                String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-// relasi kambing ke kandang
-    kandang    Kandang? @relation(fields: [id_kandang], references: [id_kandang])
+  rfid                String?  // Menambahkan field rfid dan mengatur sebagai unique
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
   id_kandang          String?  @map("id_kandang")
 
-  
+  // Relasi kambing ke kandang
+  kandang             Kandang? @relation(fields: [id_kandang], references: [id_kandang])
+
+  // Relasi kambing ke pemrosesan gambar (IOTImageProcessing)
+  iotImageProcessing  IOTImageProcessing[] @relation("KambingToIOTImageProcessing")
   @@map("kambing")
 }
+
+model IOTImageProcessing {
+  id               String    @id @default(cuid())
+  rfid             String?    @map("rfid")  // Menambahkan field rfid dan mengatur sebagai unique
+  imagePath        String
+  bobot            Float?
+  deskripsi String?  // Menambahkan field deskripsi
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime @updatedAt
+  id_kambing        String?  // Add id_kambing field
+
+  // Relasi pemrosesan gambar ke kambing menggunakan field id_kambing
+  kambing           Kambing?    @relation("KambingToIOTImageProcessing", fields: [id_kambing], references: [id_kambing])
+  @@map("IOTImageProcessing")
+}
+
+
 
 // enum status kamibing hidup mati terjual sakit 
 enum status {
@@ -138,6 +155,8 @@ model Kandang {
 
   @@map("kandang")
 }
+
+
 
 // pakan
 model Pakan {
@@ -180,7 +199,7 @@ model Dht22 {
 
 // notifications
 model notifications {
-  id_notifications           String   @id @default(cuid())
+  id_notifications      String   @id @default(cuid())
   message_notifications String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

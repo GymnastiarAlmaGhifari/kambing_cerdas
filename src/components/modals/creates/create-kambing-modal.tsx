@@ -21,32 +21,33 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { UploadCloud } from "lucide-react";
-import { Label } from "../ui/label";
+import { Label } from "../../ui/label";
+import { DatePicker } from "@/components/ui/date-picker";
 
 const formSchema = z.object({
-    nama_kandang: z.string()
+    nama_kambing: z.string()
         .min(3, { message: "Kandang name must be at least 3 characters long" })
         .refine(value => !!value.trim(), {
             message: "Kandang name is required and must not be empty",
             path: [],
         }),
-    // gambar_kandang dengan typedata file
-    gambar_kandang: z.any(),
+    // umurkambing date picker
+    umur_kambing: z.date(),
+    // gambar_kambing dengan typedata file
+    gambar_kambing: z.any(),
 });
 
 type FormData = z.infer<typeof formSchema>;
 
-export const EditKandangModal = () => {
+export const CreateKambingModal = () => {
     const { isOpen, onClose, type, data } = useModal();
     const router = useRouter();
     const queryClient = useQueryClient();
     // menampung state error
 
-    const isModalOpen = isOpen && type === "editKandang";
+    const isModalOpen = isOpen && type === "createKambing";
 
-
-
-    const { kandang } = data;
+    const { kambing } = data;
 
     const {
         register,
@@ -64,27 +65,27 @@ export const EditKandangModal = () => {
     // ketika open modal, set value form reset field
 
     useEffect(() => {
-        if (kandang) {
+        if (kambing) {
             reset()
-            setValue("nama_kandang", kandang.nama_kandang);
+            setValue("nama_kambing", kambing.nama_kambing);
         }
 
-    }, [kandang, resetField, setValue, reset]);
+    }, [kambing, resetField, setValue, reset]);
 
     const onSubmit: SubmitHandler<FormData> = async (data) => {
 
-        console.log(kandang?.id_kandang);
+        console.log(kambing?.id_kandang);
         console.log(data);
 
         const formData = new FormData();
-        formData.append("nama_kandang", data.nama_kandang);
-        if (data.gambar_kandang instanceof File) {
-            formData.append("file", data.gambar_kandang);
+        formData.append("nama_kambing", data.nama_kambing);
+        if (data.gambar_kambing instanceof File) {
+            formData.append("file", data.gambar_kambing);
         } else {
             // Use the existing file path
-            formData.append("file", kandang?.gambar_kandang || "");
+            formData.append("file", kambing?.gambar_kambing || "");
         }
-        const response = await axios.put(`/api/kandang/${kandang?.id_kandang}`
+        const response = await axios.put(`/api/kambing/${kambing?.id_kandang}`
             , formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
@@ -94,16 +95,13 @@ export const EditKandangModal = () => {
         // consol log
         console.log(response.data);
 
-        queryClient.invalidateQueries(["kandang"]);
+        queryClient.invalidateQueries(["kambing"]);
         onClose();
 
     };
 
 
-
     const handleClose = () => {
-        // reset form
-        // resetField("nama_kandang");
         reset();
         onClose();
     }
@@ -119,8 +117,8 @@ export const EditKandangModal = () => {
             };
             reader.readAsDataURL(file);
 
-            // Juga, perbarui nilai form untuk gambar_kandang saat gambar berubah
-            setValue("gambar_kandang", file);
+            // Juga, perbarui nilai form untuk gambar_kambing saat gambar berubah
+            setValue("gambar_kambing", file);
         } else {
             setPreviewImage(null);
         }
@@ -131,37 +129,40 @@ export const EditKandangModal = () => {
             <DialogContent className="bg-neutral-100 text-black p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-2xl text-center font-bold">
-                        Edit Kandang
+                        Tambah Kambing
                     </DialogTitle>
                 </DialogHeader>
 
+                <DatePicker />
+
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-10 px-6">
                     <div className="flex flex-col gap-2">
-                        <Label htmlFor="nama_kandang">
+                        <Label htmlFor="nama_kambing">
                             Nama Kandang
                         </Label>
                         <Input
-                            id="nama_kandang"
+                            id="nama_kambing"
                             className="bg-neutral-200 outline-none border-none focus:border-none"
                             type="text"
                             placeholder="Nama Kandang"
-                            defaultValue={kandang?.nama_kandang ? kandang?.nama_kandang : ""}
-                            {...register("nama_kandang")}
+                            defaultValue={kambing?.nama_kambing ? kambing?.nama_kambing : ""}
+                            {...register("nama_kambing")}
                         />
-                        {errors.nama_kandang && (
-                            <div>{errors.nama_kandang.message}</div>
+                        {errors.nama_kambing && (
+                            <div>{errors.nama_kambing.message}</div>
                         )}
                     </div>
+
                     <div className="flex flex-col gap-2">
-                        <label htmlFor="gambar_kandang" className="text-lg">
+                        <label htmlFor="gambar_kambing" className="text-lg">
                             Gambar Kandang
                         </label>
                         <input
-                            id="gambar_kandang"
+                            id="gambar_kambing"
                             type="file"
                             className="hidden"
                             accept="image/*"
-                            {...register("gambar_kandang")}
+                            {...register("gambar_kambing")}
                             onChange={handleImageChange}
                         />
                         {previewImage ? (
@@ -175,8 +176,8 @@ export const EditKandangModal = () => {
                             />
                         ) : (
                             <Image
-                                // src={kandang?.gambar_kandang ? kandang?.gambar_kandang : '/assets/default.jpeg'}
-                                src={`/api/kandang/img?img=${kandang?.gambar_kandang}`}
+                                // src={kambing?.gambar_kambing ? kambing?.gambar_kambing : '/assets/default.jpeg'}
+                                src={`/api/kambing/img?img=${kambing?.gambar_kambing}`}
                                 alt="Preview Image"
                                 width={200}
                                 height={200}
@@ -185,7 +186,7 @@ export const EditKandangModal = () => {
                             />
                         )}
                         <Label
-                            htmlFor="gambar_kandang"
+                            htmlFor="gambar_kambing"
                             className="flex flex-row mt-2 items-center justify-center text-light-2 gap-2 cursor-pointer p-2 bg-greens-gradient dark:bg-reds-gradient w-2/5 rounded-xl"
                         >
                             <UploadCloud size={24} />
@@ -201,18 +202,14 @@ export const EditKandangModal = () => {
                         >
                             Cancel
                         </Button>
-
                         <Button
                             type="submit"
                             variant="themeMode"
                         >
                             Edit Kandang
                         </Button>
-
                     </DialogFooter>
-
                 </form>
-
             </DialogContent>
         </Dialog >
     );

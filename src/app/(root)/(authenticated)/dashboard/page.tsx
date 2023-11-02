@@ -2,16 +2,21 @@
 import { SocketIndicator } from '@/components/common/Socket-indicator'
 import AreaChartContainer from '@/components/common/chart/AreaChartContainer'
 import Temperature from '@/components/common/chart/temperature'
+import { useModal } from '@/hooks/use-modal-store'
 import React, { useCallback, useEffect } from 'react'
 // import addNotification, { Notifications } from 'react-push-notification';
 
 
 type Props = {}
 
+
 const Page = (props: Props) => {
 
     // const apiUrl sama dengan url api/sensor dengan params sensor date ?= sehari
     const apiUrl = '/api/sensor?date=sehari'
+
+    const { onOpen } = useModal();
+
 
     const TryNotification = () => {
         Notification.requestPermission().then((permission) => {
@@ -111,6 +116,7 @@ const Page = (props: Props) => {
 
             <button onClick={TryNotification}>Trigger Notifikasi</button>
 
+            <button className='text-white' onClick={() => onOpen("createNotif")}>Open Modal</button>
 
             <AreaChartContainer data={data} size={{ height: 300, width: 500 }} />
             <div className="">

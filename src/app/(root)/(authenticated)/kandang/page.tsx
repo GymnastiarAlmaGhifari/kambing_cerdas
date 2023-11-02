@@ -23,7 +23,7 @@ const Kandang = () => {
 
     return (
         <>
-            <h1 className='head-text text-left '>Kandang</h1>
+            <h1 className='head-text text-left text-[#00A762] dark:text-light-2'>Kandang</h1>
 
             <button className='text-white' onClick={() => onOpen("createKandang")}>Open Modal</button>
 
