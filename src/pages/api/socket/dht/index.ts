@@ -7,10 +7,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
     return res.status(405).json({ error: "Method not allowed" });
   }
   try {
-    const { temperature, humidity } = req.body;
+    const { id_dht22, temperature, humidity } = req.body;
 
-    const sensorData = await db.sensor.create({
+    const sensorData = await db.dataDht.create({
+      // masuk kan id dan masuk ke dataDHT untuk menambahkan temperature dan humidity
       data: {
+        id_dht22: id_dht22,
         temperature,
         humidity,
       },

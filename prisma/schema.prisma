@@ -25,7 +25,6 @@ model User {
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
-  pakans        Pakan[]
   @@map("users")
 }
 
@@ -80,25 +79,15 @@ model VerificationRequest {
   @@unique([identifier, token])
 }
 
-// modul sensor dht 22 temperature and humidity 
-model Sensor {
-  id           String   @id @default(cuid())
-  temperature  Float?
-  humidity     Float?
-  createdAt    DateTime @default(now())
-  @@map("sensors")
-}
-
 model Kambing {
   id_kambing           String   @id @default(cuid())
   nama_kambing        String
   gambar_kambing      String?
   jenis_kambing       String?
   jenis_kelamin       String?
-  tanggal_lahir       DateTime?
+  tanggal_lahir       DateTime? @db.Date
   bobot               Float?
-  status              status?
-  rfid                String?  // Menambahkan field rfid dan mengatur sebagai unique
+  rfid                String?  @map("rfid") @unique // Adding unique constraint to the rfid field
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
   id_kandang          String?  @map("id_kandang")
@@ -108,6 +97,7 @@ model Kambing {
 
   // Relasi kambing ke pemrosesan gambar (IOTImageProcessing)
   iotImageProcessing  IOTImageProcessing[] @relation("KambingToIOTImageProcessing")
+  cartImageProcessing CartImageProcessing[] @relation("KambingToCartImageProcessing")
   @@map("kambing")
 }
 
@@ -116,6 +106,7 @@ model IOTImageProcessing {
   rfid             String?    @map("rfid")  // Menambahkan field rfid dan mengatur sebagai unique
   imagePath        String
   bobot            Float?
+  usia             Int?  
   deskripsi String?  // Menambahkan field deskripsi
   createdAt        DateTime  @default(now())
   updatedAt        DateTime @updatedAt
@@ -126,15 +117,23 @@ model IOTImageProcessing {
   @@map("IOTImageProcessing")
 }
 
+// cart image processing sementara
+model CartImageProcessing {
+  id               String    @id @default(cuid())
+  rfid             String?    @map("rfid")  // Menambahkan field rfid dan mengatur sebagai unique
+  imagePath        String
+  bobot            Float?
+  usia             Int?  
+  deskripsi String?  // Menambahkan field deskripsi
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime @updatedAt
+  id_kambing        String?  // Add id_kambing field
 
-
-// enum status kamibing hidup mati terjual sakit 
-enum status {
-  hidup
-  mati
-  terjual
-  sakit
+  // Relasi pemrosesan gambar ke kambing menggunakan field id_kambing
+  kambing           Kambing?    @relation("KambingToCartImageProcessing", fields: [id_kambing], references: [id_kambing])
+  @@map("CartImageProcessing")
 }
+
 
 // kandang
 model Kandang {
@@ -149,40 +148,9 @@ model Kandang {
 
 // relasi kandang ke kambing
   kambing Kambing[]
-  pakans Pakan[]
-    mq135s Mq135[]
     dht22s Dht22[]
 
   @@map("kandang")
-}
-
-
-
-// pakan
-model Pakan {
-  id_pakan           String   @id @default(cuid())
-  id_user String?
-  user    User? @relation(fields: [id_user], references: [id])
-  id_kandang String?
-  kandang    Kandang? @relation(fields: [id_kandang], references: [id_kandang])
-  nama_pakan        String?
-  jenis_pakan       String?
-  satuan_pakan      String?
-  jadwal_pakan      DateTime?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  @@map("pakan")
-}
-
-// mq-135
-model Mq135 {
-  id_mq135           String   @id @default(cuid())
-  id_kandang String?
-  kandang    Kandang? @relation(fields: [id_kandang], references: [id_kandang])
-  amonia             Float?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  @@map("mq135")
 }
 
 // dht22
@@ -190,17 +158,31 @@ model Dht22 {
   id_dht22           String   @id @default(cuid())
   id_kandang         String?
   kandang    Kandang? @relation(fields: [id_kandang], references: [id_kandang])
-  temperature        Float?
-  humidity           Float?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  // relasi dht22 ke data dht
+  data_dht DataDht[]
   @@map("dht22")
+}
+
+// data dht
+model DataDht {
+  id_data_dht           String   @id @default(cuid())
+  id_dht22         String?
+  dht22    Dht22? @relation(fields: [id_dht22], references: [id_dht22])
+  temperature             Float?
+  humidity             Float?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  @@map("data_dht")
 }
 
 // notifications
 model notifications {
   id_notifications      String   @id @default(cuid())
   message_notifications String
+  tag_id     String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

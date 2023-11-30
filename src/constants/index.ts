@@ -5,28 +5,23 @@ export const sidebarLinks = [
     label: "Dashboard",
   },
   {
-    imgUrl: "/assets/search.svg",
+    imgUrl: "/assets/Icon Kambing.png",
     route: "/kandang",
     label: "Kandang",
   },
   {
     imgUrl: "/assets/create.svg",
-    route: "/kambing",
-    label: "kambing",
+    route: "/estimate",
+    label: "estimasi berat",
   },
   {
-    imgUrl: "/assets/heart.svg",
+    imgUrl: "/assets/Icon Monitoring.png",
     route: "/alat",
     label: "Alat",
   },
   {
     imgUrl: "/assets/community.svg",
-    route: "/karyawan",
-    label: "Karyawan",
-  },
-  {
-    imgUrl: "/assets/user.svg",
-    route: "/profile",
-    label: "Profile",
+    route: "/pengguna",
+    label: "Pengguna",
   },
 ];

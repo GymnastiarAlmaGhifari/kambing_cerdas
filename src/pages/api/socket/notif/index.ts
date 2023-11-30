@@ -7,14 +7,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
     return res.status(405).json({ error: "Method not allowed" });
   }
   try {
-    const { message_notifications } = req.body;
+    const { message_notifications, tag_id } = req.body;
 
     const notificationsData = await db.notifications.update({
       where: {
-        id_notifications: "cloe127oa0001cmawhfzoy9iq",
+        id_notifications: "clpf9isba0000cmv0v4uh56zi",
       },
       data: {
         message_notifications: message_notifications,
+        tag_id: tag_id,
       },
     });
 

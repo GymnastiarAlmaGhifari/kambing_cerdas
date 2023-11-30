@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
-import { Sensor } from "@prisma/client";
+import { DataDht } from "@prisma/client";
 import { NextRequest } from "next/server";
 
 // Mendapatkan semua data sensor
@@ -9,27 +9,55 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
 
+    const id = searchParams.get("id");
     const date = searchParams.get("date");
 
     // const cursor = searchParams.get("cursor");
 
-    let sensorData: Sensor[] = [];
+    let sensorData: DataDht[] = [];
 
     // jika date dengan nilai default "sehari"
-
-    if (date === "sehari") {
-      sensorData = await db.sensor.findMany({
-        // cursor: {
-        //   id: cursor,
-        // },
+    if (date === "sejam") {
+      sensorData = await db.dataDht.findMany({
+        where: {
+          id_dht22: id,
+          createdAt: {
+            gte: new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000),
+          },
+        },
         select: {
-          id: true,
+          id_dht22: true,
+          id_data_dht: true,
           temperature: true,
           humidity: true,
           createdAt: true, // Memasukkan createdAt dari Prisma
+          updatedAt: true,
         },
-        // take: 20,
-        // skip: 1,
+        take: 60,
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      return NextResponse.json({ sensorData });
+    } else if (date === "sehari") {
+      sensorData = await db.dataDht.findMany({
+        where: {
+          id_dht22: id,
+          createdAt: {
+            gte: new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000),
+          },
+        },
+
+        select: {
+          id_dht22: true,
+          id_data_dht: true,
+          temperature: true,
+          humidity: true,
+          createdAt: true, // Memasukkan createdAt dari Prisma
+          updatedAt: true,
+        },
+        take: 1440,
         orderBy: {
           createdAt: "desc",
         },
@@ -37,15 +65,47 @@ export async function GET(req: NextRequest) {
 
       return NextResponse.json({ sensorData });
     } else if (date === "seminggu") {
-      sensorData = await db.sensor.findMany({
+      sensorData = await db.dataDht.findMany({
+        where: {
+          id_dht22: id,
+          createdAt: {
+            gte: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000),
+          },
+        },
         select: {
-          id: true,
+          id_dht22: true,
+          id_data_dht: true,
           temperature: true,
           humidity: true,
           createdAt: true, // Memasukkan createdAt dari Prisma
+          updatedAt: true,
         },
+        take: 10080,
         orderBy: {
-          temperature: "desc",
+          createdAt: "desc",
+        },
+      });
+
+      return NextResponse.json({ sensorData });
+    } else if (date === "sebulan") {
+      sensorData = await db.dataDht.findMany({
+        where: {
+          id_dht22: id,
+          createdAt: {
+            gte: new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000),
+          },
+        },
+        select: {
+          id_dht22: true,
+          id_data_dht: true,
+          temperature: true,
+          humidity: true,
+          createdAt: true, // Memasukkan createdAt dari Prisma
+          updatedAt: true,
+        },
+        take: 43200,
+        orderBy: {
+          createdAt: "desc",
         },
       });
 
@@ -75,7 +135,7 @@ export async function GET(req: NextRequest) {
 
 //   const cursor = searchParams.get("cursor");
 
-//   let sensorData: Sensor[] = [];
+//   let sensorData: DataDht[] = [];
 
 //   if (cursor) {
 //     sensorData = await db.sensor.findMany({
@@ -121,10 +181,11 @@ export async function GET(req: NextRequest) {
 // buat data sensor baru
 export async function POST(req: Request) {
   try {
-    const { temperature, humidity } = await req.json();
+    const { id_data_dht, temperature, humidity } = await req.json();
 
-    const sensor = await db.sensor.create({
+    const sensor = await db.dataDht.create({
       data: {
+        id_dht22: id_data_dht,
         temperature: temperature,
         humidity: humidity,
       },

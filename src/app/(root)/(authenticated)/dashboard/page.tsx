@@ -1,140 +1,99 @@
 "use client"
-import { SocketIndicator } from '@/components/common/Socket-indicator'
-import AreaChartContainer from '@/components/common/chart/AreaChartContainer'
+import Humidity from '@/components/common/chart/humidity';
 import Temperature from '@/components/common/chart/temperature'
-import { useModal } from '@/hooks/use-modal-store'
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios'
+import Image from 'next/image';
 import React, { useCallback, useEffect } from 'react'
-// import addNotification, { Notifications } from 'react-push-notification';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+
+const Dashboard = () => {
+    const [selectedDate, setSelectedDate] = React.useState('sejam');
+
+    const router = useRouter();
+    // jika tidak ada session maka redirect ke login
+    const { data: session } = useSession();
+
+    useEffect(() => {
+        if (session?.user.role !== 'owner' && session?.user.role !== 'pekerja') {
+            router.push('/');
+
+        }
+    }, [session, router]);
 
 
-type Props = {}
-
-
-const Page = (props: Props) => {
-
-    // const apiUrl sama dengan url api/sensor dengan params sensor date ?= sehari
-    const apiUrl = '/api/sensor?date=sehari'
-
-    const { onOpen } = useModal();
-
-
-    const TryNotification = () => {
-        Notification.requestPermission().then((permission) => {
-            if (permission === 'granted') {
-                new Notification('example notification', {
-                    body: 'This is an example notification',
-                    data: {
-                        hello: 'world',
-                    },
-                });
-            }
-        });
-    };
-
-    // const showNotification = () => {
-    //     const title = 'Halo';
-    //     const options = {
-    //         body: 'Ini notifikasi sederhana.',
-    //         //   icon: '/path/to/icon.png', // Ganti dengan path ke ikon notifikasi Anda
-    //     };
-
-    //     new Notification(title, options);
-    // };
-
-
-    // const sendNotification = () => {
-    //     if ('Notification' in window && Notification.permission === 'granted') {
-    //         new Notification('Halo!', {
-    //             body: 'Ini notifikasi sederhana.',
-    //         });
-    //     }
-    // }
-
-
-    // const requestNotificationPermission = useCallback(() => {
-    //     if ('notification' in window) {
-    //         Notification.requestPermission().then((permission) => {
-    //             if (permission === 'granted') {
-    //                 sendNotification();
-    //             }
-    //         });
-    //     }
-    // }, []);
-
-    // useEffect(() => {
-    //     if ('Notification' in window) {
-    //         requestNotificationPermission();
-    //     }
-    // }, [requestNotificationPermission]);
-
-    const data = [
-        { x: 'Jan', y: 10 },
-        { x: 'Feb', y: 60 },
-        { x: 'Mar', y: 15 },
-        // Tambahkan data sesuai dengan kebutuhan Anda
-        { x: 'Apr', y: 25 },
-        { x: 'May', y: 45 },
-        { x: 'Jun', y: 30 },
-        { x: 'Jul', y: 70 },
-        { x: 'Aug', y: 55 },
-        { x: 'Sep', y: 40 },
-        { x: 'Oct', y: 85 },
-        { x: 'Nov', y: 20 },
-        { x: 'Dec', y: 75 },
-        { x: 'Jan', y: 5 },
-        { x: 'Feb', y: 35 },
-        { x: 'Mar', y: 45 },
-        { x: 'Apr', y: 60 },
-        { x: 'May', y: 20 },
-        { x: 'Jun', y: 90 },
-        { x: 'Jul', y: 15 },
-        { x: 'Aug', y: 70 },
-        { x: 'Sep', y: 30 },
-        { x: 'Oct', y: 80 },
-        { x: 'Nov', y: 25 },
-        { x: 'Dec', y: 50 },
-        { x: 'Jan', y: 10 },
-        { x: 'Feb', y: 40 },
-        { x: 'Mar', y: 65 },
-        { x: 'Apr', y: 30 },
-        { x: 'May', y: 70 },
-        { x: 'Jun', y: 15 },
-        { x: 'Jul', y: 50 },
-        { x: 'Aug', y: 20 },
-        { x: 'Sep', y: 85 },
-        { x: 'Oct', y: 40 },
-        // Lanjutkan sampai bulan ke-30
-    ];
+    const handleDateChange = useCallback((event: any) => {
+        setSelectedDate(event.target.value);
+    }, []);
+    const { data: kandangDashboard, isLoading, isError } = useQuery({
+        queryKey: ['kandangDashbaord'],
+        queryFn: async () => {
+            const { data } = await axios.get('/api/dht');
+            return data
+        }
+    })
 
 
     return (
         <div className='text-white '>
-            page
-            {/* <Notifications /> */}
-
-            <SocketIndicator />
-
-            <button onClick={TryNotification}>Trigger Notifikasi</button>
-
-            <button className='text-white' onClick={() => onOpen("createNotif")}>Open Modal</button>
-
-            <AreaChartContainer data={data} size={{ height: 300, width: 500 }} />
             <div className="">
-                <div className="mt-10">
-                    <Temperature
-                        apiUrl={apiUrl}
-                    // paramKey="sensorId"
-                    // paramValue={""}
-                    // socketUrl="/api/socket/dht"
-                    // socketQuery={{
-                    //     sensorId: "",
-                    // }}
-                    />
-                </div>
+                {/* Add a select input for date options */}
+
+                <h1 className='text-heading2-semibold'>Dashboard</h1>
+                <label htmlFor="dateSelector" className="text-white">
+                    Pilih Waktu:
+                    <select
+                        id="dateSelector"
+                        value={selectedDate}
+                        onChange={handleDateChange}
+                        className="ml-2 p-2 rounded-md my-10"
+                    >
+                        <option value="sejam">Setiap Jam</option>
+                        <option value="sehari">Setiap Hari</option>
+                        <option value="seminggu">Setiap Minggu</option>
+                        <option value="sebulan">Setiap     Bulan</option>
+                    </select>
+                </label>
+                {isLoading ? (
+                    <p className='text-white'>Loading...</p>
+                ) : isError ? (
+                    <p>Error: Failed to fetch data</p>
+                ) : (
+                    kandangDashboard.map((item: any) => (
+                        // map data dan pindah ke page kandang/[kandangId]
+                        <div key={item.id_dht22}>
+                            <div className="text-heading3-bold">{item.kandang.nama_kandang}</div>
+                            <div className="my-5 flex flex-row gap-20">
+                                <div className="relative xl:block hidden min-w-[450px] xl:[350px] 2xl:h-[305px]">
+                                    <div className="absolute inset-[3px] border-solid border-secondary border-[3px] flex flex-col justify-center items-center overflow-hidden bg-cover z-[5] rounded-lg">
+                                        <Image
+                                            width={100}
+                                            height={100}
+                                            className="absolute top-0 left-0 w-full h-full object-fit"                        // src gambar jika tidak ada maka ambil default.jpeg dari folder public/assets
+                                            src={`/api/kandang/img?img=${item.kandang.gambar_kandang}`}
+                                            alt={item.kandang.nama_kandang}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex flex-wrap gap-5  lg:justify-around">
+                                    <Temperature
+                                        apiUrl={`/api/sensor?id=${item.id_dht22}&date=${selectedDate}`}
+                                        queryKey={`sensor-${item.id_dht22}-${selectedDate}`}
+                                    />
+                                    <Humidity
+                                        apiUrl={`/api/sensor?id=${item.id_dht22}&date=${selectedDate}`}
+                                        queryKey={`sensor-${item.id_dht22}-${selectedDate}`}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                )}
 
             </div>
         </div>
     )
 }
 
-export default Page
+export default Dashboard

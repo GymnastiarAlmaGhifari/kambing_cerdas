@@ -1,4 +1,3 @@
-
 import { FC } from 'react';
 import {
     Area,
@@ -14,6 +13,7 @@ type DefaultAreaChartProps = {
     children: React.ReactNode;
     data: any[];
     renderTooltip?: (point: TooltipProps<number, string>) => React.ReactNode;
+    text: string
 };
 
 export const DefaultAreaChart: FC<DefaultAreaChartProps> = ({
@@ -23,36 +23,40 @@ export const DefaultAreaChart: FC<DefaultAreaChartProps> = ({
     color,
     renderTooltip,
     children,
+    text
 }) => {
     return (
-        <AreaChart
-            data={data}
-            height={height}
-            width={width}
-            margin={{ left: 0, top: 0, right: 0, bottom: 0 }}
-        >
-            <defs>
-                <linearGradient id={`gradient_${color}`} x1='0%' y1='0%' x2='0%' y2='100%'>
-                    <stop offset='0%' stopColor={color} stopOpacity={0.6} />
-                    <stop offset='80%' stopColor={color} stopOpacity={0} />
-                </linearGradient>
-            </defs>
-            <Area
-                type='monotone'
-                dataKey='y'
-                stroke={color}
-                strokeWidth={3}
-                fillOpacity={1}
-                fill={`url(#${`gradient_${color}`})`}
-                isAnimationActive={false}
-            />
-            {renderTooltip && (
-                <Tooltip<number, string>
-                    content={x => renderTooltip(x)}
-                    wrapperStyle={{ outline: 'none' }}
+        <div className="bg-[#1C1917] rounded-md relative flex flex-row justify-center">
+            <h1 className="text-heading4-medium absolute mt-5">{text}</h1>
+            <AreaChart
+                data={data}
+                height={height}
+                width={width}
+                margin={{ left: 0, top: 0, right: 0, bottom: 0 }}
+            >
+                <defs>
+                    <linearGradient id={`gradient_${color}`} x1='0%' y1='0%' x2='0%' y2='100%'>
+                        <stop offset='0%' stopColor={color} stopOpacity={0.6} />
+                        <stop offset='80%' stopColor={color} stopOpacity={0} />
+                    </linearGradient>
+                </defs>
+                <Area
+                    type='monotone'
+                    dataKey='y'
+                    stroke={color}
+                    strokeWidth={3}
+                    fillOpacity={1}
+                    fill={`url(#${`gradient_${color}`})`}
+                    isAnimationActive={false}
                 />
-            )}
-            {children}
-        </AreaChart>
+                {renderTooltip && (
+                    <Tooltip<number, string>
+                        content={x => renderTooltip(x)}
+                        wrapperStyle={{ outline: 'none' }}
+                    />
+                )}
+                {children}
+            </AreaChart>
+        </div>
     );
 };

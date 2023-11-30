@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Sensor } from "@prisma/client"; // Import model Sensor dari Prisma
+import { DataDht } from "@prisma/client"; // Import model Sensor dari Prisma
 
 import { useSocket } from "@/components/providers/socket-provider";
 
@@ -14,34 +14,34 @@ export const useChartSocket = ({ addKey, updateKey, queryKey }: SensorSocketProp
   const { socket } = useSocket();
   const queryClient = useQueryClient();
 
-  function showNotification(title: string, options: NotificationOptions) {
-    if (Notification.permission === "granted") {
-      const notification = new Notification(title, options);
-    }
-  }
+  // function showNotification(title: string, options: NotificationOptions) {
+  //   if (Notification.permission === "granted") {
+  //     const notification = new Notification(title, options);
+  //   }
+  // }
 
-  // Di dalam fungsi yang dipanggil saat event "addKey" dari WebSocket muncul
-  useEffect(() => {
-    if (socket) {
-      const handleAddKey = (sensorData: Sensor) => {
-        // Tampilkan notifikasi saat ada data baru dari WebSocket
-        showNotification("Data Sensor Baru", { body: `Temperatur: ${sensorData.temperature}°C` });
-      };
+  // // Di dalam fungsi yang dipanggil saat event "addKey" dari WebSocket muncul
+  // useEffect(() => {
+  //   if (socket) {
+  //     const handleAddKey = (sensorData: DataDht) => {
+  //       // Tampilkan notifikasi saat ada data baru dari WebSocket
+  //       showNotification("Data DataDht Baru", { body: `Temperatur: ${sensorData.temperature}°C` });
+  //     };
 
-      socket.on(addKey, handleAddKey);
+  //     socket.on(addKey, handleAddKey);
 
-      return () => {
-        socket.off(addKey, handleAddKey);
-      };
-    }
-  }, [socket, addKey]);
+  //     return () => {
+  //       socket.off(addKey, handleAddKey);
+  //     };
+  //   }
+  // }, [socket, addKey]);
 
   useEffect(() => {
     if (!socket) {
       return;
     }
 
-    socket.on(updateKey, (sensorData: Sensor) => {
+    socket.on(updateKey, (sensorData: DataDht) => {
       queryClient.setQueryData([queryKey], (oldData: any) => {
         if (!oldData || !oldData.pages || oldData.pages.length === 0) {
           return oldData;
@@ -50,8 +50,8 @@ export const useChartSocket = ({ addKey, updateKey, queryKey }: SensorSocketProp
         const newData = oldData.pages.map((page: any) => {
           return {
             ...page,
-            sensorData: page.sensorData.map((item: Sensor) => {
-              if (item.id === sensorData.id) {
+            sensorData: page.sensorData.map((item: DataDht) => {
+              if (item.id_data_dht === sensorData.id_data_dht) {
                 return sensorData;
               }
               return item;
@@ -66,7 +66,7 @@ export const useChartSocket = ({ addKey, updateKey, queryKey }: SensorSocketProp
       });
     });
 
-    socket.on(addKey, (sensorData: Sensor) => {
+    socket.on(addKey, (sensorData: DataDht) => {
       queryClient.setQueryData([queryKey], (oldData: any) => {
         if (!oldData || !oldData.pages || oldData.pages.length === 0) {
           return {

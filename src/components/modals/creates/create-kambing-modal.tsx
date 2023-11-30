@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -17,8 +17,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import Image from "next/image";
 import { UploadCloud } from "lucide-react";
 import { Label } from "../../ui/label";
@@ -26,28 +26,35 @@ import { DatePicker } from "@/components/ui/date-picker";
 
 const formSchema = z.object({
     nama_kambing: z.string()
-        .min(3, { message: "Kandang name must be at least 3 characters long" })
+        .min(3, { message: "nama kambing minimal 3 huruf" })
         .refine(value => !!value.trim(), {
             message: "Kandang name is required and must not be empty",
             path: [],
         }),
+    // RFID  input validation string and possible null values
+    rfid: z.string().nullable(),
     // umurkambing date picker
-    umur_kambing: z.date(),
+    tanggal_lahir: z.date(),
     // gambar_kambing dengan typedata file
     gambar_kambing: z.any(),
 });
 
 type FormData = z.infer<typeof formSchema>;
 
+
 export const CreateKambingModal = () => {
     const { isOpen, onClose, type, data } = useModal();
     const router = useRouter();
     const queryClient = useQueryClient();
+
+    // set error string 
+    const [error, setError] = useState<string | null>(null);
+
     // menampung state error
 
     const isModalOpen = isOpen && type === "createKambing";
 
-    const { kambing } = data;
+    const { dataModal } = data;
 
     const {
         register,
@@ -62,42 +69,49 @@ export const CreateKambingModal = () => {
         resolver: zodResolver(formSchema),
     });
 
-    // ketika open modal, set value form reset field
 
-    useEffect(() => {
-        if (kambing) {
-            reset()
-            setValue("nama_kambing", kambing.nama_kambing);
-        }
-
-    }, [kambing, resetField, setValue, reset]);
 
     const onSubmit: SubmitHandler<FormData> = async (data) => {
+        try {
+            console.log(dataModal?.idKandang);
 
-        console.log(kambing?.id_kandang);
-        console.log(data);
+            console.log(data);
+            const umurKambing = data.tanggal_lahir;
+            const formattedDate = `${umurKambing.getFullYear()}-${String(umurKambing.getMonth() + 1).padStart(2, '0')}-${String(umurKambing.getDate()).padStart(2, '0')}`;
 
-        const formData = new FormData();
-        formData.append("nama_kambing", data.nama_kambing);
-        if (data.gambar_kambing instanceof File) {
-            formData.append("file", data.gambar_kambing);
-        } else {
-            // Use the existing file path
-            formData.append("file", kambing?.gambar_kambing || "");
+            console.log(formattedDate);
+
+            const formData = new FormData();
+            formData.append("nama_kambing", data.nama_kambing);
+            formData.append("rfid", data.rfid || "");
+            formData.append("tanggal_lahir", formattedDate);
+            if (data.gambar_kambing instanceof File) {
+                formData.append("file", data.gambar_kambing);
+            }
+
+            const response = await axios.post(`/api/kandang/${dataModal?.idKandang}/kambing`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            console.log(response.data);
+
+            queryClient.invalidateQueries(["kambing"]);
+            reset();
+            onClose();
+        } catch (error: any) {
+            if (axios.isAxiosError(error)) {
+                // If it's an AxiosError, it means it's a response from the server
+                const axiosError = error as AxiosError<{ message: string }>;
+                setError(axiosError.response?.data.message || "An error occurred");
+            } else {
+                // If it's not an AxiosError, it might be a network error or something else
+                setError("An error occurred");
+            }
+            // You can choose to reset or perform other actions on error
+            reset();
         }
-        const response = await axios.put(`/api/kambing/${kambing?.id_kandang}`
-            , formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
-
-        // consol log
-        console.log(response.data);
-
-        queryClient.invalidateQueries(["kambing"]);
-        onClose();
-
     };
 
 
@@ -105,6 +119,10 @@ export const CreateKambingModal = () => {
         reset();
         onClose();
     }
+
+    const handleDateSelect = (selectedDate: Date) => {
+        setValue('tanggal_lahir', selectedDate); // Set the selected date to the form field
+    };
 
     const [previewImage, setPreviewImage] = useState<string | null>(null);
 
@@ -126,31 +144,52 @@ export const CreateKambingModal = () => {
 
     return (
         <Dialog open={isModalOpen} onOpenChange={handleClose} >
-            <DialogContent className="bg-neutral-100 text-black p-0 overflow-hidden">
+            <DialogContent className="bg-neutral-100 dark:bg-dark-5 dark:text-light-2 text-black p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-2xl text-center font-bold">
                         Tambah Kambing
                     </DialogTitle>
                 </DialogHeader>
 
-                <DatePicker />
 
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-10 px-6">
                     <div className="flex flex-col gap-2">
                         <Label htmlFor="nama_kambing">
-                            Nama Kandang
+                            Nama Kambing
                         </Label>
                         <Input
                             id="nama_kambing"
-                            className="bg-neutral-200 outline-none border-none focus:border-none"
+                            className="dark:bg-[#515151] bg-neutral-200 outline-none border-none focus:border-none"
                             type="text"
-                            placeholder="Nama Kandang"
-                            defaultValue={kambing?.nama_kambing ? kambing?.nama_kambing : ""}
+                            placeholder="Nama Kambing"
                             {...register("nama_kambing")}
                         />
                         {errors.nama_kambing && (
                             <div>{errors.nama_kambing.message}</div>
                         )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="rfid">
+                            Rfid
+                        </Label>
+                        <Input
+                            id="rfid"
+                            className="dark:bg-[#515151] bg-neutral-200 outline-none border-none focus:border-none"
+                            type="text"
+                            placeholder="RFID bisa dikosongkan"
+                            {...register("rfid")}
+                        />
+                        {errors.rfid && (
+                            <div>{errors.rfid.message}</div>
+                        )}
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="tanggal_lahir">
+                            Umur Kambing
+                        </Label>
+                        <DatePicker onDateSelect={handleDateSelect} />
+
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -165,26 +204,16 @@ export const CreateKambingModal = () => {
                             {...register("gambar_kambing")}
                             onChange={handleImageChange}
                         />
-                        {previewImage ? (
-                            <Image
-                                src={previewImage}
-                                alt="Preview Image"
-                                width={200}
-                                height={200}
-                                objectFit="cover"
-                                className="rounded-md"
-                            />
-                        ) : (
-                            <Image
-                                // src={kambing?.gambar_kambing ? kambing?.gambar_kambing : '/assets/default.jpeg'}
-                                src={`/api/kambing/img?img=${kambing?.gambar_kambing}`}
-                                alt="Preview Image"
-                                width={200}
-                                height={200}
-                                objectFit="cover"
-                                className="rounded-md"
-                            />
-                        )}
+
+                        <Image
+                            src={previewImage || "/assets/default.jpeg"}
+                            alt="Preview Image"
+                            width={200}
+                            height={200}
+                            objectFit="cover"
+                            className="rounded-md"
+                        />
+
                         <Label
                             htmlFor="gambar_kambing"
                             className="flex flex-row mt-2 items-center justify-center text-light-2 gap-2 cursor-pointer p-2 bg-greens-gradient dark:bg-reds-gradient w-2/5 rounded-xl"
@@ -192,6 +221,14 @@ export const CreateKambingModal = () => {
                             <UploadCloud size={24} />
                             <span>Upload Image</span>
                         </Label>
+                        {/* set error from submiting data */}
+
+
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        {error && (
+                            <div className="text-red-500">{error}</div>
+                        )}
                     </div>
                     <DialogFooter className="px-6 pb-8">
                         <Button
@@ -206,7 +243,7 @@ export const CreateKambingModal = () => {
                             type="submit"
                             variant="themeMode"
                         >
-                            Edit Kandang
+                            Tambah Kambing
                         </Button>
                     </DialogFooter>
                 </form>

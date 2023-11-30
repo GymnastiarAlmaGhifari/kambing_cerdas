@@ -11,14 +11,35 @@ export const config = {
   },
 };
 
+const nameFile = (id: string) => {
+  const datenow = new Date();
+
+  // Mendapatkan informasi waktu saat ini
+  const seconds = datenow.getSeconds();
+  const minutes = datenow.getMinutes();
+  const hours = datenow.getHours();
+  const day = datenow.getDate();
+  const month = datenow.getMonth() + 1; // Month is zero-based
+  const year = datenow.getFullYear();
+
+  // Format file name: id_detik-jam-tanggal-bulan-tahun
+  const filename = `${id}_${seconds}-${minutes}-${hours}-${day}-${month}-${year}.jpeg`;
+  return filename;
+};
+
 const readFile = (req: NextApiRequest, saveLocally?: boolean): Promise<{ fields: formidable.Fields; files: formidable.Files }> => {
   const options: formidable.Options = {};
   if (saveLocally) {
     options.uploadDir = path.join(process.cwd(), "/images/iotimage");
     options.filename = (name, ext, path, form) => {
       const { id } = req.query;
+
+      // Mendapatkan informasi waktu saat ini
+
       //  const filename = id ditambah dengan extension atau tipe dari file
-      const filename = `${id}.jpeg`;
+      // const filename = `${id}.jpeg`;
+      const filename = nameFile(id as string);
+
       return filename;
     };
   }
@@ -50,22 +71,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
     // ambil filename dari readFile(req, true);
 
     // Ambil 'filename' dari 'files' yang diterima dari 'readFile'
-    const { id } = req.query;
-    //  const filename = id ditambah dengan extension atau tipe dari file
-    const filename = `${id}.jpeg`;
+    const { id, bobot, usia, deskripsi } = req.query;
+
+    const filename = nameFile(id as string);
 
     // Mengisi imagePath dengan nama file
-    const iotImageProcessingData = await db.iOTImageProcessing.create({
+    const estimateData = await db.cartImageProcessing.create({
       data: {
         imagePath: filename,
         id_kambing: id as string,
+        bobot: parseFloat(bobot as string),
+        usia: parseInt(usia as string),
+        deskripsi: deskripsi as string,
       },
     });
 
-    res?.socket?.server?.io?.emit("addIot", iotImageProcessingData);
-    console.log("iotImageProcessingData", iotImageProcessingData);
+    res?.socket?.server?.io?.emit("addEstimate", estimateData);
+    console.log("cartImageProcessing", estimateData);
 
-    return res.status(200).json(iotImageProcessingData);
+    return res.status(200).json(estimateData);
     // res.json({ done: "ok" });
   } catch (e: any) {
     res.status(500).json({ message: e.message });

@@ -19,9 +19,12 @@ export async function POST(req: Request) {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 
-  const fileExtension = file.name.split(".").pop() || "txt";
+  const fileExtension = file.name.split(".").pop() || "jpeg";
 
-  const imagePath = `${id}.${fileExtension}`;
+  // tambahkan waktu saat ini ke nama file untuk menghindari nama file yang sama
+  const datenow = new Date();
+  const datestring = datenow.toISOString().replace(/:/g, "-");
+  const imagePath = `${id}-${datestring}.${fileExtension}`;
 
   const path = join(process.cwd(), "/images/iotimage", imagePath);
 

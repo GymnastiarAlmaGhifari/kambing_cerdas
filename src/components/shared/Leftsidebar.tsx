@@ -9,7 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { sidebarLinks } from "@/constants";
 import Logout from './Logout';
 import { signOut, useSession } from 'next-auth/react';
-import { buttonVariants } from '../ui/button';
+import { Button, buttonVariants } from '../ui/button';
 
 interface LeftsidebarProps {
     // title?: string
@@ -20,7 +20,14 @@ const Leftsidebar: FC<LeftsidebarProps> = ({ }) => {
 
     const router = useRouter();
     const pathname = usePathname();
-
+    const handleLogout = async () => {
+        await signOut({
+            redirect: true,
+            callbackUrl: '/',
+            // Do not redirect immediately; handle it manually
+        });
+        // Redirect to the sign-in page or any other desired page
+    };
 
 
 
@@ -56,10 +63,7 @@ const Leftsidebar: FC<LeftsidebarProps> = ({ }) => {
             <div className='mt-10 px-6'>
 
                 <button
-                    onClick={() => signOut({
-                        redirect: true,
-                        callbackUrl: `${window.location.origin}/sign-in`,
-                    })}
+                    onClick={handleLogout}
                     className='flex cursor-pointer gap-4 p-4'>
                     <Image
                         src='/assets/logout.svg'

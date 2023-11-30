@@ -13,6 +13,7 @@ export async function GET(req: NextRequest) {
       select: {
         id_notifications: true,
         message_notifications: true,
+        tag_id: true,
         createdAt: true,
         updatedAt: true,
       },

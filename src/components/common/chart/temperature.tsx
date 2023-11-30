@@ -1,6 +1,6 @@
 "use client"
 import React, { Fragment, useEffect, useState } from "react";
-import { useChartQuery } from "@/hooks/use-chart-query";
+import { useQuery } from "@/hooks/use-query";
 import { useChartSocket } from "@/hooks/use-chart-socket";
 import AreaChartContainer from "./AreaChartContainer";
 
@@ -12,22 +12,21 @@ interface SensorData {
 
 interface TemperatureProps {
     apiUrl: string;
+
     // socketUrl: string;
     // socketQuery: Record<string, string>;
-    // paramKey: "sensorId" | "conversationId";
+    queryKey: string; // Ensure that queryKey is defined as a string
     // paramValue: string;
 }
 
 export const Temperature = ({
     apiUrl,
+    queryKey,
 }: TemperatureProps) => {
-    const queryKey = `sensor`;
+    // const queryKey = `sensor`;
     const addKey = `sensors`;
 
-    const {
-        data,
-        status,
-    } = useChartQuery({
+    const { data, status } = useQuery({
         queryKey,
         apiUrl,
     });
@@ -41,33 +40,15 @@ export const Temperature = ({
 
     return (
         <div>
-            <h1>Data Sensor</h1>
             {status === "loading" ? (
                 <p>Loading...</p>
             ) : status === "error" ? (
                 <p>Error loading data</p>
             ) : (
                 <div>
-                    {/* {data?.pages.map((page, pageIndex) => (
-                        <Fragment key={pageIndex}>
-                            {page.sensorData.map((item: any) => (
-                                <div key={item.id}>
-                                    <p>Temperature: {item.temperature}</p>
-                                    <p>createdAt: {item.createdAt}</p>
-                                </div>
-
-                            ))}
-                        </Fragment>
-                    ))} */}
-                    {/* buatkan AreaChartContainer dengan data item.Temperature dan item.createAt */}
-
-
-                    <AreaChartContainer data={formattedData.reverse()} size={{ height: 300, width: 400 }} />
-
-
+                    <AreaChartContainer text={"Suhu"} tipe="temperature" warna={"#211DE1"} data={formattedData.reverse()} size={{ height: 300, width: 400 }} />
                 </div>
             )}
-
         </div>
     );
 }

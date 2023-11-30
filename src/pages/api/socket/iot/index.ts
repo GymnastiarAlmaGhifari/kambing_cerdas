@@ -18,7 +18,9 @@ const readFile = (req: NextApiRequest, saveLocally?: boolean): Promise<{ fields:
     options.filename = (name, ext, path, form) => {
       const { id } = req.query;
       //  const filename = id ditambah dengan extension atau tipe dari file
-      const filename = `${id}.jpeg`;
+      const filename = id as string;
+
+      // const filename = `${id}.jpeg`;
       return filename;
     };
   }

@@ -1,9 +1,9 @@
 "use client";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 import {
     Dialog,
@@ -13,20 +13,16 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import Image from "next/image";
+import { UploadCloud } from "lucide-react";
+import { Label } from "@/components/ui/label";
+
 
 const formSchema = z.object({
     nama_kandang: z.string()
@@ -49,15 +45,27 @@ export const CreateKandangModal = () => {
 
     const isModalOpen = isOpen && type === "createKandang";
 
-    const form = useForm<FormData>({
+    const [error, setError] = useState<string | null>(null);
+
+
+    const {
+        register,
+        handleSubmit,
+        watch,
+        setValue,
+        reset,
+        resetField,
+
+        formState: { errors },
+    } = useForm<FormData>({
         resolver: zodResolver(formSchema),
     });
 
-    const { mutate: addKandang, isLoading, isError } = useMutation({
-        mutationFn: async (values: z.infer<typeof formSchema>) => {
+    const onSubmit: SubmitHandler<FormData> = async (data) => {
+        try {
             const formData = new FormData();
-            formData.append("nama_kandang", values.nama_kandang);
-            formData.append("file", values.gambar_kandang);
+            formData.append("nama_kandang", data.nama_kandang);
+            formData.append("file", data.gambar_kandang);
 
             const response = await axios.post("/api/kandang", formData, {
                 headers: {
@@ -65,181 +73,135 @@ export const CreateKandangModal = () => {
                 },
             });
 
-            return response.data;
-        },
-        onSuccess: () => {
+
+
+            console.log(response.data);
+
             queryClient.invalidateQueries(["kandang"]);
-            form.reset();
-
+            reset();
             onClose();
-        },
-        onError: (error) => {
-            console.log(error);
-        },
-    });
-
-    const handleAddKambing = async (values: z.infer<typeof formSchema>) => {
-        try {
-            await addKandang(values); // Trigger the mutation using addKandang
-            // The mutation will be handled by useMutation's onSuccess and onError callbacks
-            // jika kadang suc
-
-        } catch (error) {
-            console.error("Submission error:", error);
+        } catch (error: any) {
+            if (axios.isAxiosError(error)) {
+                // If it's an AxiosError, it means it's a response from the server
+                const axiosError = error as AxiosError<{ message: string }>;
+                setError(axiosError.response?.data.message || "An error occurred");
+            } else {
+                // If it's not an AxiosError, it might be a network error or something else
+                setError("An error occurred");
+            }
+            // You can choose to reset or perform other actions on error
+            reset();
         }
     };
 
 
     const handleClose = () => {
-        form.reset();
+        reset();
         onClose();
     }
+
+    const [previewImage, setPreviewImage] = useState<string | null>(null);
+
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewImage(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+
+            // Juga, perbarui nilai form untuk gambar_kambing saat gambar berubah
+            setValue("gambar_kandang", file);
+        } else {
+            setPreviewImage(null);
+        }
+    };
 
 
     return (
         <Dialog open={isModalOpen} onOpenChange={handleClose} >
-            <DialogContent className="bg-white text-black p-0 overflow-hidden">
+            <DialogContent className="bg-neutral-100 dark:bg-dark-5 dark:text-light-2 text-black p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-2xl text-center font-bold">
-                        Customize your Kandang
+                        Tambah Kandang
                     </DialogTitle>
-                    <DialogDescription className="text-center text-zinc-500">
-                        Give your kandang a personality with a name and an image. You can always change it later.
-                    </DialogDescription>
+
                 </DialogHeader>
-                {
-                    isError ? (
-                        <p>
-                            {isError.valueOf.name}
-                        </p >
-                    ) : (
-                        <Form {...form}>
-                            <form
-                                onSubmit={form.handleSubmit(handleAddKambing)}
-                                className="space-y-8">
-                                <div className="space-y-8 px-6">
-                                    <FormField
-                                        control={form.control}
-                                        name="nama_kandang"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel
-                                                    className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70"
-                                                >
-                                                    Server name
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        disabled={isLoading}
-                                                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                                                        placeholder="Enter server name"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </div>
-                                <div className="space-y-8 px-6">
-                                    <FormField
-                                        control={form.control}
-                                        name="gambar_kandang"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel
-                                                    className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70"
-                                                >
-                                                    Kandang image
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        type="file"
-                                                        disabled={isLoading}
-                                                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                                                        accept=".jpg, .jpeg, .png, .svg, .gif, .mp4"
 
-                                                        onChange={(e) =>
-                                                            field.onChange(e.target.files ? e.target.files[0] : null)
-                                                        }
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </div>
-                                <DialogFooter className="px-6 pb-8">
-                                    <Button
-                                        type="button"
-                                        variant="secondary"
-                                        onClick={handleClose}
-                                        disabled={isLoading}
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        type="submit"
-                                        variant="default"
-                                        disabled={isLoading}
-                                    >
-                                        Create
-                                    </Button>
-                                </DialogFooter>
+                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-10 px-6">
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="nama_kandang">
+                            Nama Kandang
+                        </Label>
+                        <Input
+                            id="nama_kandang"
+                            className="dark:bg-[#515151] bg-neutral-200 outline-none border-none focus:border-none"
+                            type="text"
+                            placeholder="Nama Kandang"
+                            {...register("nama_kandang")}
+                        />
+                        {errors.nama_kandang && (
+                            <div>{errors.nama_kandang.message}</div>
+                        )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="gambar_kandang" className="text-lg">
+                            Gambar Kandang
+                        </label>
+                        <input
+                            id="gambar_kandang"
+                            type="file"
+                            className="hidden"
+                            accept="image/*"
+                            {...register("gambar_kandang")}
+                            onChange={handleImageChange}
+                        />
 
-                            </form>
-                        </Form>
-                    )
-                }
+                        <Image
+                            src={previewImage || "/assets/default.jpeg"}
+                            alt="Preview Image"
+                            width={200}
+                            height={200}
+                            objectFit="cover"
+                            className="rounded-md"
+                        />
+
+                        <Label
+                            htmlFor="gambar_kandang"
+                            className="flex flex-row mt-2 items-center justify-center text-light-2 gap-2 cursor-pointer p-2 bg-greens-gradient dark:bg-reds-gradient w-2/5 rounded-xl"
+                        >
+                            <UploadCloud size={24} />
+                            <span>Upload Image</span>
+                        </Label>
+                        {/* set error from submiting data */}
+
+
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        {error && (
+                            <div className="text-red-500">{error}</div>
+                        )}
+                    </div>
+                    <DialogFooter className="px-6 pb-8">
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            onClick={handleClose}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            type="submit"
+                            variant="themeMode"
+                        >
+                            Buat Kandang Baru
+                        </Button>
+                    </DialogFooter>
+
+                </form>
             </DialogContent>
         </Dialog >
 
     );
 }
-
-
-
-// const isLoading = form.formState.isSubmitting;
-
-// const onSubmit = async (values: z.infer<typeof formSchema>) => {
-//     try {
-//         const formData = new FormData();
-//         formData.append("nama_kandang", values.nama_kandang);
-//         formData.append("file", values.gambar_kandang);
-
-//         await axios.post("/api/kandang", formData, {
-//             headers: {
-//                 "Content-Type": "multipart/form-data",
-//             },
-//         });
-
-//         queryClient.invalidateQueries(["kandang"]);
-//         form.reset();
-//         onClose();
-//     } catch (error) {
-//         // Handle any submission errors here
-//         console.error("Submission error:", error);
-//     }
-// };
-
-
-// const { mutate: onSubmit, isLoading, isError } = useMutation({
-//     mutationFn: async (values: z.infer<typeof formSchema>) => {
-//         const formData = new FormData();
-//         formData.append("nama_kandang", values.nama_kandang);
-//         formData.append("file", values.gambar_kandang);
-
-//         const response = await axios.post("/api/kandang", formData, {
-//             headers: {
-//                 "Content-Type": "multipart/form-data",
-//             },
-//         });
-
-//         return response.data;
-//     },
-//     onSuccess: () => {
-//         queryClient.invalidateQueries(["kandang"]);
-//         form.reset();
-//         onClose();
-//     },
-// })

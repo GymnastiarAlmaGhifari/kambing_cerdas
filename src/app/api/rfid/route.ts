@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
         select: {
           id_kambing: true,
           rfid: true,
+          tanggal_lahir: true,
           nama_kambing: true,
           createdAt: true,
         },

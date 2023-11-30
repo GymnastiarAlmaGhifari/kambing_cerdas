@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
 
     const notificationsData = await db.notifications.update({
       where: {
-        id_notifications: "clnxsi9nl0000cmkce64vlly6",
+        id_notifications: "clpf9isba0000cmv0v4uh56zi",
       },
       data: {
         message_notifications: message_notifications,

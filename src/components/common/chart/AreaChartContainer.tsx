@@ -12,24 +12,37 @@ type DataPoint = {
 type AreaChartContainerProps = {
     data: DataPoint[];
     size: { height: number; width: number };
+    warna: string;
+    // tipe?: {
+    //     humidity?: string;
+    //     temperature?: string;
+    // }
+    // tipe bolean temperature humidity
+    tipe: "humidity" | "temperature";
+    text: string
 };
 
-const AreaChartContainer: React.FC<AreaChartContainerProps> = ({ data, size }) => {
+const AreaChartContainer: React.FC<AreaChartContainerProps> = ({ data, size, warna, tipe, text }) => {
     // Definisikan fungsi untuk merender tooltip jika diperlukan
     const renderTooltip = (val: any) => {
-        return `${val.payload?.[0]?.value?.toFixed(1)} C`;
+        if (tipe === "temperature") {
+            return `${val.payload?.[0]?.value?.toFixed(1)} °C`;
+        } else if (tipe === "humidity") {
+            return `${val.payload?.[0]?.value?.toFixed(1)} %`;
+        }
+        return null; // Handle other cases or provide a default
     };
 
     return (
-        <ResponsiveContainer width={size.width} height={size.height}>
+        <ResponsiveContainer width={size.width} height={size.height} >
             <DefaultAreaChart
+                text={text}
                 data={data}
                 height={size.height}
                 width={size.width}
-                color='#8884d8'
+                color={warna}
                 // tooltip={renderTooltip}
                 renderTooltip={renderTooltip}
-
             >
                 {/* Tambahkan komponen YAxis dan Tooltip di dalam DefaultAreaChart */}
                 <YAxis hide={true} type="number" domain={[-5, 105]} />
@@ -42,7 +55,6 @@ const AreaChartContainer: React.FC<AreaChartContainerProps> = ({ data, size }) =
                 />
             </DefaultAreaChart>
         </ResponsiveContainer >
-
     );
 };
 

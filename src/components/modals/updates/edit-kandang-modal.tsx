@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -44,7 +44,7 @@ export const EditKandangModal = () => {
 
     const isModalOpen = isOpen && type === "editKandang";
 
-
+    const [error, setError] = useState<string | null>(null);
 
     const { kandang } = data;
 
@@ -73,32 +73,38 @@ export const EditKandangModal = () => {
 
 
     const onSubmit: SubmitHandler<FormData> = async (data) => {
+        try {
+            const formData = new FormData();
+            formData.append("nama_kandang", data.nama_kandang);
+            if (data.gambar_kandang instanceof File) {
+                formData.append("file", data.gambar_kandang);
+            }
+            const response = await axios.put(`/api/kandang/${kandang?.id_kandang}`
+                , formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
 
-        console.log(kandang?.id_kandang);
-        console.log(data);
+            // consol log
+            console.log(response.data);
 
-        const formData = new FormData();
-        formData.append("nama_kandang", data.nama_kandang);
-        if (data.gambar_kandang instanceof File) {
-            formData.append("file", data.gambar_kandang);
-        } else {
-            // Use the existing file path
-            formData.append("file", kandang?.gambar_kandang || "");
+            queryClient.invalidateQueries(["kandang"]);
+            onClose();
+            reset();
+        } catch (error: any) {
+            if (axios.isAxiosError(error)) {
+                // If it's an AxiosError, it means it's a response from the server
+                const axiosError = error as AxiosError<{ message: string }>;
+                setError(axiosError.response?.data.message || "An error occurred");
+            } else {
+                // If it's not an AxiosError, it might be a network error or something else
+                setError("An error occurred");
+            }
+            // You can choose to reset or perform other actions on error
+            reset();
         }
-        const response = await axios.put(`/api/kandang/${kandang?.id_kandang}`
-            , formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
-
-        // consol log
-        console.log(response.data);
-
-        queryClient.invalidateQueries(["kandang"]);
-        onClose();
-
-    };
+    }
 
 
 
@@ -129,7 +135,7 @@ export const EditKandangModal = () => {
 
     return (
         <Dialog open={isModalOpen} onOpenChange={handleClose} >
-            <DialogContent className="bg-neutral-100 text-black p-0 overflow-hidden">
+            <DialogContent className="bg-neutral-100 dark:bg-dark-5 dark:text-light-2 text-black p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-2xl text-center font-bold">
                         Edit Kandang
@@ -143,7 +149,7 @@ export const EditKandangModal = () => {
                         </Label>
                         <Input
                             id="nama_kandang"
-                            className="bg-neutral-200 outline-none border-none focus:border-none"
+                            className="dark:bg-[#515151] bg-neutral-200 outline-none border-none focus:border-none"
                             type="text"
                             placeholder="Nama Kandang"
                             defaultValue={kandang?.nama_kandang ? kandang?.nama_kandang : ""}
@@ -192,6 +198,11 @@ export const EditKandangModal = () => {
                             <UploadCloud size={24} />
                             <span>Upload Image</span>
                         </Label>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        {error && (
+                            <div className="text-red-500">{error}</div>
+                        )}
                     </div>
                     <DialogFooter className="px-6 pb-8">
                         <Button

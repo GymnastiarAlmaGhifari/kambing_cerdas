@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@prisma/client"; // Import model Notif dari Prisma
+import axios from "axios";
 
 import { useSocket } from "@/components/providers/socket-provider";
 
@@ -24,6 +25,17 @@ export const useNotifSocket = ({ addKey, updateKey, queryKey }: NotifSocketProps
   // Di dalam fungsi yang dipanggil saat event "addKey" dari WebSocket muncul
   useEffect(() => {
     if (socket) {
+      axios
+        .get(`/api/getid`)
+        .then((response) => {
+          // Handle the response data as needed
+          console.log(response.data.tag_id); // Assuming tag_id is the relevant data field
+        })
+        .catch((error) => {
+          // Handle any errors that occur during the request
+          console.error("Error fetching data:", error);
+        });
+
       const handleAddKey = (notificationsData: notifications) => {
         // Mengecek izin notifikasi
         if (Notification.permission !== "granted") {
@@ -32,6 +44,7 @@ export const useNotifSocket = ({ addKey, updateKey, queryKey }: NotifSocketProps
             if (permission === "granted") {
               // Izin diberikan, tampilkan notifikasi
               showNotification("Pesan Baru", { body: `${notificationsData.message_notifications}` });
+              // kirim ke api get id
             }
           });
         } else {
@@ -39,6 +52,8 @@ export const useNotifSocket = ({ addKey, updateKey, queryKey }: NotifSocketProps
           showNotification("Pesan Baru", { body: `${notificationsData.message_notifications}` });
         }
       };
+
+      // axios kirim ke api get id
 
       socket.on(addKey, handleAddKey);
 

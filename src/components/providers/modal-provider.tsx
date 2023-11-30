@@ -6,6 +6,8 @@ import { CreateKandangModal } from "@/components/modals/creates/create-kandang-m
 import { EditKandangModal } from "@/components/modals/updates/edit-kandang-modal";
 import { CreateKambingModal } from "@/components/modals/creates/create-kambing-modal";
 import { CreateNotifModal } from "@/components/modals/creates/create-notif-modal";
+import { EditKambingModal } from "@/components/modals/updates/edit-kambing-modal";
+import { TerimaModal } from "@/components/modals/iot/terima-iot-modal";
 
 export const ModalProvider = () => {
     const [isMounted, setIsMounted] = useState(false);
@@ -23,8 +25,10 @@ export const ModalProvider = () => {
             <CreateSensorModal />
             <CreateKandangModal />
             <EditKandangModal />
+            <EditKambingModal />
             <CreateKambingModal />
             <CreateNotifModal />
+            <TerimaModal />
         </>
     )
 }
