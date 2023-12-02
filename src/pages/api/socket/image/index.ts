@@ -71,7 +71,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
     // ambil filename dari readFile(req, true);
 
     // Ambil 'filename' dari 'files' yang diterima dari 'readFile'
-    const { id, bobot, usia, deskripsi } = req.query;
+    const { id, bobot, usia, deskripsi, standart, keterangan } = req.query;
 
     const filename = nameFile(id as string);
 
@@ -83,6 +83,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
         bobot: parseFloat(bobot as string),
         usia: parseInt(usia as string),
         deskripsi: deskripsi as string,
+        standart: parseFloat(standart as string),
+        keterangan: keterangan as string,
       },
     });
 

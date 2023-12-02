@@ -33,7 +33,10 @@ const RootLayout: FC<RootLayoutProps> = async ({
   return (
     <Provider session={session}>
       <html lang="en">
-        <body className={inter.className}>{children}</body>
+        <body className={inter.className}>{
+          children
+        }
+        </body>
       </html>
     </Provider>
 

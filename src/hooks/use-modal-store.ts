@@ -18,6 +18,8 @@ export type terimaData = {
   usia?: number | null;
   bobot?: number | null;
   deskripsi?: string | null;
+  standart?: number | null;
+  keterangan?: string | null;
 };
 
 export type ModalType = "createKandang" | "createKambing" | "createSensor" | "createNotif" | "editKandang" | "editKambing" | "editSensor" | "deleteKandang" | "deleteKambing" | "deleteSensor" | "terima" | "tolak";

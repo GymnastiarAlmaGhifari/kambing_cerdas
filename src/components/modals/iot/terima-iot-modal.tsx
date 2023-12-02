@@ -34,6 +34,8 @@ export const TerimaModal = () => {
             bobot: terimaData?.bobot,
             deskripsi: terimaData?.deskripsi,
             imagePath: terimaData?.image_path,
+            standart: terimaData?.standart,
+            keterangan: terimaData?.keterangan,
         };
 
         const responseDelete = {

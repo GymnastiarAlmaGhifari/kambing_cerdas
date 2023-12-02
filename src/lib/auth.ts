@@ -1,17 +1,19 @@
 import { NextAuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { GoogleProfile } from "next-auth/providers/google";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { db } from "./db";
 import { compare, hashSync } from "bcrypt";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { db } from "./db";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
+
   pages: {
     signIn: "/sign-in",
     error: "/error",
@@ -58,16 +60,16 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token = {
-          ...token,
-          role: user.role,
-          username: user.username,
-        };
+        token.id = user.id;
+        token.role = user.role;
+        token.image = user.image;
+        token.name = user.name;
       }
-      return token;
+      return Promise.resolve(token);
     },
     async session({ session, token }) {
       if (session?.user) {
@@ -110,3 +112,141 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
+
+// import bcrypt from "bcrypt";
+// import NextAuth, { AuthOptions, DefaultSession } from "next-auth";
+// import CredentialsProvider from "next-auth/providers/credentials";
+
+// import { PrismaAdapter } from "@next-auth/prisma-adapter";
+
+// import { db } from "./db";
+
+// declare module "next-auth" {
+//   interface Session extends DefaultSession {
+//     user: {
+//       id: string;
+//       name: string;
+//       email: string;
+
+//       role: "user" | "owner" | "pekerja";
+
+//       image: string | null;
+//       // ...other properties
+//       // role: UserRole;
+//     };
+//     // & DefaultSession["user"];
+//   }
+
+//   interface User {
+//     // ...other properties
+//     role: "user" | "owner" | "pekerja";
+//   }
+// }
+
+// export const authOptions: AuthOptions = {
+//   adapter: PrismaAdapter(db),
+//   providers: [
+//     GoogleProvider({
+//       clientId: process.env.GOOGLE_CLIENT_ID!,
+//       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+//     }),
+//     CredentialsProvider({
+//       name: "Credentials",
+//       credentials: {
+//         email: { label: "Email", type: "email", placeholder: "jhon@gmail.com" },
+//         password: { label: "Password", type: "password" },
+//       },
+//       async authorize(credentials) {
+//         if (!credentials?.email || !credentials?.password) {
+//           return null;
+//         }
+//         const existingUser = await db.user.findUnique({
+//           where: { email: credentials?.email },
+//         });
+
+//         if (!existingUser) {
+//           throw new Error("Email Anda Belum Terdaftar");
+//         }
+
+//         if (existingUser.password) {
+//           const passwordMatch = await compare(credentials.password, existingUser.password);
+
+//           if (!passwordMatch) {
+//             throw new Error("Password Anda Salah");
+//           }
+//         }
+
+//         return existingUser;
+//       },
+//     }),
+//   ],
+
+//   debug: process.env.NODE_ENV === "development",
+//   session: {
+//     strategy: "jwt",
+//     maxAge: 30 * 24 * 60 * 60, // 30 days
+//   },
+
+//   callbacks: {
+//     async jwt({ token, user }) {
+//       if (user) {
+//         token.id = user.id;
+//         token.role = user.role;
+//         token.image = user.image;
+//         token.name = user.name;
+//       }
+//       return Promise.resolve(token);
+//     },
+//     session: async ({ session, token }) => {
+//       session.user = {
+//         // @ts-ignore
+//         id: token.id,
+//         // @ts-ignore
+//         role: token.role,
+//         // @ts-ignore
+//         image: token.image,
+//         // @ts-ignore
+//         name: token.name,
+//         // @ts-ignore
+//         email: token.email,
+//       };
+//       return Promise.resolve(session);
+//     },
+//     async signIn(params) {
+//       const { user, account, profile } = params;
+//       const randomString = Math.random().toString(36).substring(2);
+
+//       if (account?.provider === "google" && profile?.email) {
+//         // Cari atau buat pengguna berdasarkan email dari profil Google
+//         const existingUser = await db.user.findUnique({
+//           where: { email: profile.email },
+//         });
+
+//         if (existingUser) {
+//           // Setel peran pengguna sesuai kebutuhan Anda
+//           user.role = existingUser.role;
+//           user.username = existingUser.username;
+//         } else {
+//           // Jika pengguna tidak ditemukan, Anda dapat membuatnya dengan kata sandi acak menggunakan bcrypt
+//           user.role = "user"; // Ganti dengan peran default yang Anda inginkan
+
+//           // Menghasilkan kata sandi acak dengan bcrypt
+//           const saltRounds = 10; // Tingkat garam, semakin tinggi semakin aman tetapi memakan waktu lebih lama
+//           const randomPassword = Math.random().toString(36).substring(2);
+//           const hashedPassword = hashSync(randomPassword, saltRounds);
+
+//           user.password = hashedPassword;
+//         }
+//       }
+
+//       return true;
+//     },
+//   },
+//   pages: {
+//     signIn: "/sign-in",
+//     error: "/error",
+//   },
+//   secret: process.env.NEXTAUTH_SECRET,
+// };
+
+// export default NextAuth(authOptions);

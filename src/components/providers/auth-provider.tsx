@@ -1,18 +1,23 @@
 'use client'
 
-import { SessionProvider } from "next-auth/react"
+import { SessionProvider, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
+
 
 
 export default function Provider({
     children,
-    session
+    session,
+
 }: {
     children: React.ReactNode
     session: any
 }): React.ReactNode {
 
+
     const router = useRouter()
+    // const { data: sessionData } = useSession();
+
     // jika tidak ada session arah kan ke /
     if (!session) {
         router.push('/')

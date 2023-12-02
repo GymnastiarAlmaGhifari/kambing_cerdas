@@ -11,6 +11,8 @@ type CartImageProcessing = {
   deskripsi?: string | null;
   bobot?: number | null;
   imagePath?: string;
+  standart?: number | null;
+  keterangan?: string | null;
   createdAt: Date;
   kambing?: {
     nama_kambing: string;
@@ -29,6 +31,8 @@ export async function GET(req: NextRequest) {
         deskripsi: true,
         bobot: true,
         imagePath: true,
+        standart: true,
+        keterangan: true,
         kambing: {
           select: {
             id_kambing: true,
@@ -50,7 +54,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { id_kambing, usia, imagePath, bobot, deskripsi } = await req.json();
+  const { id_kambing, usia, imagePath, bobot, deskripsi, standart, keterangan } = await req.json();
 
   try {
     if (!id_kambing || !usia) {
@@ -76,6 +80,8 @@ export async function POST(req: NextRequest) {
         usia: usia,
         imagePath: imagePath as string,
         bobot: bobot,
+        standart: standart,
+        keterangan: keterangan,
         deskripsi: deskripsi as string,
       },
     });

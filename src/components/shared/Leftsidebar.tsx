@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
-import { sidebarLinks } from "@/constants";
+import { sidebarLinksPekerja, sidebarLinksOwner } from "@/constants";
 import Logout from './Logout';
 import { signOut, useSession } from 'next-auth/react';
 import { Button, buttonVariants } from '../ui/button';
@@ -17,9 +17,9 @@ interface LeftsidebarProps {
 
 const Leftsidebar: FC<LeftsidebarProps> = ({ }) => {
     const { data: session } = useSession();
+    const pathname = usePathname();
 
     const router = useRouter();
-    const pathname = usePathname();
     const handleLogout = async () => {
         await signOut({
             redirect: true,
@@ -35,29 +35,65 @@ const Leftsidebar: FC<LeftsidebarProps> = ({ }) => {
     return (
         <section className='custom-scrollbar leftsidebar greens-gradient dark:darks-gradient'>
             <div className='flex w-full flex-1 flex-col gap-6 px-6'>
-                {sidebarLinks.map((link) => {
-                    const isActive =
-                        (pathname?.includes(link.route) && link.route.length > 1) ||
-                        pathname === link.route;
+                {
+                    session?.user.role === 'owner' ?
+                        <>
+                            {sidebarLinksOwner.map((link) => {
+                                const isActive =
+                                    (pathname?.includes(link.route) && link.route.length > 1) ||
+                                    pathname === link.route;
 
-                    // if (link.route === "/profile") link.route = `${link.route}/${userId}`;
-                    return (
-                        <Link
-                            href={link.route}
-                            key={link.label}
-                            className={`leftsidebar_link ${isActive && "bg-[#01C577] dark:bg-red-500"}`}
-                        >
-                            <Image
-                                src={link.imgUrl}
-                                alt={link.label}
-                                width={24}
-                                height={24}
-                            />
+                                // if (link.route === "/profile") link.route = `${link.route}/${userId}`;
+                                return (
+                                    <Link
+                                        href={link.route}
+                                        key={link.label}
+                                        className={`leftsidebar_link ${isActive && "bg-[#01C577] dark:bg-red-500"}`}
+                                    >
+                                        <Image
+                                            src={link.imgUrl}
+                                            alt={link.label}
+                                            width={24}
+                                            height={24}
+                                        />
 
-                            <p className='text-light-1 max-lg:hidden'>{link.label}</p>
-                        </Link>
-                    );
-                })}
+                                        <p className='text-light-1 max-lg:hidden'>{link.label}</p>
+                                    </Link>
+                                );
+                            })}
+                        </>
+                        :
+                        <>
+                            {sidebarLinksPekerja.map((link) => {
+                                const isActive =
+                                    (pathname?.includes(link.route) && link.route.length > 1) ||
+                                    pathname === link.route;
+
+                                // if (link.route === "/profile") link.route = `${link.route}/${userId}`;
+                                return (
+                                    <Link
+                                        href={link.route}
+                                        key={link.label}
+                                        className={`leftsidebar_link ${isActive && "bg-[#01C577] dark:bg-red-500"}`}
+                                    >
+                                        <Image
+                                            src={link.imgUrl}
+                                            alt={link.label}
+                                            width={24}
+                                            height={24}
+                                        />
+
+                                        <p className='text-light-1 max-lg:hidden'>{link.label}</p>
+                                    </Link>
+                                );
+                            })}
+                        </>
+
+                }
+
+
+
+
             </div>
 
             <div className='mt-10 px-6'>

@@ -123,6 +123,16 @@ const KambingDetailCard: FC<KambingDetailCardProps> = ({ item }) => {
                                                         })}
                                                     </span> Lakukan pengukuran bobot lagi
                                                 </h1>
+                                                <h1>
+                                                    {
+                                                        items.standart
+                                                    }
+                                                </h1>
+                                                <h1>
+                                                    {
+                                                        items.keterangan
+                                                    }
+                                                </h1>
                                             </div>
                                         </div>
 

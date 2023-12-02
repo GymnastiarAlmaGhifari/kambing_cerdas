@@ -37,7 +37,7 @@ const AuthenticatedLayout: FC<AuthenticatedLayoutProps> = async ({ children }) =
 
 
     return (
-        <Provider session={session}>
+        <Provider session={session}  >
             <html lang='en'>
                 <body className={inter.className}>
                     <ThemeProvider

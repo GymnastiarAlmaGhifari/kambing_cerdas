@@ -100,7 +100,9 @@ const EstimateCard: FC<EstimateCardProps> = (
                                                         nama: item.kambing?.nama_kambing,
                                                         id_kambing: item.kambing?.id_kambing, image_path: item.imagePath,
                                                         usia: item.usia, bobot: item.bobot,
-                                                        deskripsi: item.deskripsi
+                                                        deskripsi: item.deskripsi,
+                                                        standart: item.standart,
+                                                        keterangan: item.keterangan
                                                     }}
                                                 />
                                                 <OpenModal

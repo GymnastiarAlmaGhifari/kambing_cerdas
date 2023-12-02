@@ -25,7 +25,7 @@ export const useCartEstimateSocket = ({ addKey, updateKey, queryKey }: CartImage
     if (socket) {
       const handleAddKey = (estimateData: CartImageProcessing) => {
         // Tampilkan notifikasi saat ada data baru dari WebSocket
-        showNotification("Perhitungan Bobot Baru", { body: `: ${estimateData.bobot}` });
+        showNotification("Perhitungan Bobot Baru", { body: `Bobot : ${estimateData.bobot}` });
       };
 
       socket.on(addKey, handleAddKey);

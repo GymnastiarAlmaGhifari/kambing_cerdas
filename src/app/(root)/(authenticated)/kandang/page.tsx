@@ -13,16 +13,9 @@ import { Plus } from 'lucide-react';
 
 
 const Kandang = () => {
-    const router = useRouter();
     // jika tidak ada session maka redirect ke login
     const { data: session } = useSession();
 
-    useEffect(() => {
-        if (session?.user.role !== 'owner' && session?.user.role !== 'pekerja') {
-            router.push('/');
-
-        }
-    }, [session, router]);
     // const kandangData = await getKandang()
     const { data: kandangData, isLoading, isError } = useQuery({
         queryKey: ['kandang'],

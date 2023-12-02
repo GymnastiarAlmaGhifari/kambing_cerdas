@@ -106,7 +106,9 @@ model IOTImageProcessing {
   rfid             String?    @map("rfid")  // Menambahkan field rfid dan mengatur sebagai unique
   imagePath        String
   bobot            Float?
-  usia             Int?  
+  usia             Int?
+  standart         Float?
+  keterangan       String?  
   deskripsi String?  // Menambahkan field deskripsi
   createdAt        DateTime  @default(now())
   updatedAt        DateTime @updatedAt
@@ -123,7 +125,9 @@ model CartImageProcessing {
   rfid             String?    @map("rfid")  // Menambahkan field rfid dan mengatur sebagai unique
   imagePath        String
   bobot            Float?
-  usia             Int?  
+  usia             Int?
+    standart         Float?
+  keterangan       String?    
   deskripsi String?  // Menambahkan field deskripsi
   createdAt        DateTime  @default(now())
   updatedAt        DateTime @updatedAt

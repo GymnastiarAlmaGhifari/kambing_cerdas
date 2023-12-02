@@ -63,33 +63,8 @@ const KandangCard: FC<KandangCardProps> = ({ item }) => {
                             </Button>
                         </Link>
                     </div>
-                    {/* <Image
-                        width={100}
-                        height={100}
-                        className='w-10 h-10'
-                        // src gambar jika tidak ada maka ambil default.jpeg dari folder public/assets
-                        src={item.gambar_kandang ? item.gambar_kandang : '/assets/default.jpeg'}
-                        alt={item.nama_kandang} /> */}
+
                 </div>
-                {/* <Link href={`/kandang/${item.id_kandang}`} className='text-white m-10'>
-                    <h1>{item.id_kandang}</h1>
-                    <h2>{item.nama_kandang}</h2>
-
-                    <Image
-                        width={100}
-                        height={100}
-                        className='w-10 h-10'
-                        // src gambar jika tidak ada maka ambil default.jpeg dari folder public/assets
-                        src={item.gambar_kandang ? item.gambar_kandang : '/assets/default.jpeg'}
-
-
-                        alt={item.nama_kandang} />
-                </Link> */}
-
-                {/* <button className='text-white bg-red-600'
-                    onClick={() => onOpen("editKandang", { kandang: item })}>
-                    edit kandang
-                </button> */}
             </div>
 
         </>
