@@ -12,15 +12,6 @@ export default function Provider({
     session: any
 }): React.ReactNode {
 
-    const router = useRouter()
-    // jika tidak ada session arah kan ke /
-    if (!session) {
-        router.push('/')
-        return null
-    }
-
-
-
     return <SessionProvider session={session}>
         {children}
     </SessionProvider>

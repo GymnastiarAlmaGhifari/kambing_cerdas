@@ -49,48 +49,6 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// Menambahkan estimate ke IOTimageProcessing
-// export async function POST(req: NextRequest) {
-//   const { searchParams } = new URL(req.url);
-//   const idKambing = searchParams.get("id_kambing");
-//   const usia = searchParams.get("usia");
-//   const imagePath = searchParams.get("imagePath");
-//   const bobot = searchParams.get("bobot");
-//   const deskripsi = searchParams.get("deskripsi");
-//   try {
-//     if (!idKambing || !usia) {
-//       return NextResponse.json({ message: "Parameter id, id_kambing, dan usia diperlukan." }, { status: 400 });
-//     }
-
-//     // buat jika id_kambing dan usia sudah ada maka tidak bisa menambahkan data
-//     const dataAda = await db.cartImageProcessing.findFirst({
-//       where: {
-//         id_kambing: idKambing as string,
-//         usia: parseInt(usia), // Mengasumsikan 'usia' adalah nilai numerik, sesuaikan jika tidak
-//       },
-//     });
-
-//     if (dataAda) {
-//       return NextResponse.json({ message: "Data sensor sudah ada." }, { status: 400 });
-//     }
-
-//     // tambahkan data iotimageprocessing
-//     const data = await db.iOTImageProcessing.create({
-//       data: {
-//         id_kambing: idKambing as string,
-//         usia: parseInt(usia), // Mengasumsikan 'usia' adalah nilai numerik, sesuaikan jika tidak
-//         imagePath: imagePath as string,
-//         bobot: parseFloat(bobot as string),
-//         deskripsi: deskripsi as string,
-//       },
-//     });
-
-//     return NextResponse.json({ data, message: "Data sensor berhasil ditambahkan." });
-//   } catch (e) {
-//     console.error(e);
-//     return NextResponse.json({ message: "Terjadi kesalahan dalam menambahkan data sensor." }, { status: 500 });
-//   }
-// }
 export async function POST(req: NextRequest) {
   const { id_kambing, usia, imagePath, bobot, deskripsi } = await req.json();
 

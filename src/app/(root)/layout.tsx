@@ -3,17 +3,12 @@ import type { Metadata } from 'next'
 import { Inter, Poppins } from 'next/font/google';
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
-import Provider from '@/components/providers/auth-provider';
+import Provider from '@/components/providers/auth-landing';
 import { FC, ReactNode } from 'react';
 import { ModalProvider } from '@/components/providers/modal-provider';
 import { redirect } from 'next/navigation';
 
-// const poppins = Poppins({
-//   subsets: ['latin'],
-//   display: 'swap',
-//   variable: '--font-poppins',
-//   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900']
-// });
+
 const inter = Inter({ subsets: ['latin'] });
 
 

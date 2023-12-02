@@ -8,6 +8,7 @@ import { CreateKambingModal } from "@/components/modals/creates/create-kambing-m
 import { CreateNotifModal } from "@/components/modals/creates/create-notif-modal";
 import { EditKambingModal } from "@/components/modals/updates/edit-kambing-modal";
 import { TerimaModal } from "@/components/modals/iot/terima-iot-modal";
+import { TolakModal } from "@/components/modals/iot/tolak-iot-modal";
 
 export const ModalProvider = () => {
     const [isMounted, setIsMounted] = useState(false);
@@ -29,6 +30,7 @@ export const ModalProvider = () => {
             <CreateKambingModal />
             <CreateNotifModal />
             <TerimaModal />
+            <TolakModal />
         </>
     )
 }

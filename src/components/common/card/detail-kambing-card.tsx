@@ -69,7 +69,7 @@ const KambingDetailCard: FC<KambingDetailCardProps> = ({ item }) => {
                         {isLoading ? (
                             <p className='text-white'>Loading...</p>
                         ) : isError ? (
-                            <p>Error: Failed to fetch data</p>
+                            <p>Data Detail Kambing Masih belum tersedia</p>
                         ) : (
                             kambingDetailData.map((items: iotProcess) => (
                                 <div key={items.id} className='flex md:flex-row flex-col gap-5 relative mt-10'>

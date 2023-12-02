@@ -103,9 +103,19 @@ const EstimateCard: FC<EstimateCardProps> = (
                                                         deskripsi: item.deskripsi
                                                     }}
                                                 />
-                                                <Button variant={'themeMode'} size={'default'}>
-                                                    Tolak
-                                                </Button>
+                                                <OpenModal
+                                                    isOpen='tolak'
+                                                    variant={'themeMode'}
+                                                    text='Tolak'
+                                                    terimaData={{
+                                                        id: item.id,
+                                                        nama: item.kambing?.nama_kambing,
+                                                        id_kambing: item.kambing?.id_kambing, image_path: item.imagePath,
+                                                        usia: item.usia, bobot: item.bobot,
+                                                        deskripsi: item.deskripsi
+                                                    }}
+                                                />
+
                                             </div>
                                         </div>
                                     </div>
