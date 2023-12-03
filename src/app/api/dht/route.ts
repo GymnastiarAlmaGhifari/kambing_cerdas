@@ -19,6 +19,22 @@ export async function POST(req: Request) {
   }
 }
 
+export async function DELETE(req: Request) {
+  try {
+    const { id_dht } = await req.json();
+
+    const sensor = await db.dht22.delete({
+      where: {
+        id_dht22: id_dht,
+      },
+    });
+    return NextResponse.json(sensor, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ message: "Error loading sensor." }, { status: 500 });
+  }
+}
+
 // get
 export async function GET(req: Request) {
   try {

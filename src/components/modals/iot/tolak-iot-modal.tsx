@@ -83,7 +83,7 @@ export const TolakModal = () => {
 
                 <DialogDescription
                     className="px-6 pb-8 text-neutral-500 dark:text-neutral-400 text-center">
-                    Apakah Anda yakin ingin menerima perhitungan bobot ini?
+                    Apakah Anda yakin ingin menolak perhitungan bobot ini?
                 </DialogDescription>
 
                 <DialogFooter className="px-6 pb-8">

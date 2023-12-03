@@ -1,3 +1,4 @@
+import Alat from "@/components/shared/Authenticated/Alat"
 import { authOptions } from "@/lib/auth"
 import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
@@ -11,7 +12,9 @@ const page = async () => {
         redirect('/')
     }
     return (
-        <div>page</div>
+        <div>
+            <Alat />
+        </div>
     )
 }
 

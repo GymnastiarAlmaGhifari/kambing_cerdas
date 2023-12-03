@@ -1,9 +1,9 @@
 import { db } from "@/lib/db";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { join } from "path";
-import { writeFile } from "fs/promises";
+import { unlink, writeFile } from "fs/promises";
 import { v4 as uuidv4 } from "uuid";
 
 export async function POST(req: Request) {
@@ -54,4 +54,95 @@ export async function GET(req: Request) {
   });
 
   return NextResponse.json(kandang);
+}
+
+export async function DELETE(req: NextRequest) {
+  const { id_kandang } = await req.json();
+
+  try {
+    if (!id_kandang) {
+      return NextResponse.json({ message: "Parameter id kandang diperlukan." }, { status: 400 });
+    }
+
+    const semuaGambarKandang = await db.kandang.findMany({
+      where: {
+        id_kandang: id_kandang as string,
+      },
+      select: {
+        gambar_kandang: true,
+      },
+    });
+
+    const semuaGambarIot = await db.iOTImageProcessing.findMany({
+      where: {
+        kambing: {
+          kandang: {
+            id_kandang: id_kandang as string,
+          },
+        },
+      },
+      select: {
+        imagePath: true,
+      },
+    });
+
+    const semuaGambarKambing = await db.kambing.findMany({
+      where: {
+        id_kandang: id_kandang as string,
+      },
+      select: {
+        gambar_kambing: true,
+      },
+    });
+
+    // Hapus gambar dari sistem file (iotimage)
+    for (const gambar of semuaGambarIot) {
+      const pathGambarIot = join(process.cwd(), "images/iotimage", gambar.imagePath);
+      await unlink(pathGambarIot);
+    }
+
+    // Hapus gambar dari sistem file (kambing)
+    for (const gambarKambing of semuaGambarKambing) {
+      if (gambarKambing.gambar_kambing) {
+        const pathGambarKambing = join(process.cwd(), "images/kambing", gambarKambing.gambar_kambing);
+        await unlink(pathGambarKambing);
+      }
+    }
+
+    // Hapus gambar dari sistem file (kandang)
+    for (const gambarKandang of semuaGambarKandang) {
+      if (gambarKandang.gambar_kandang) {
+        const pathGambarKandang = join(process.cwd(), "images/kandang", gambarKandang.gambar_kandang);
+        await unlink(pathGambarKandang);
+      }
+    }
+
+    // Hapus data dari database (iotimage)
+    const dataIot = await db.iOTImageProcessing.deleteMany({
+      where: {
+        kambing: {
+          kandang: {
+            id_kandang: id_kandang as string,
+          },
+        },
+      },
+    });
+    // Hapus data dari database (kambing)
+    const dataKambing = await db.kambing.deleteMany({
+      where: {
+        id_kandang: id_kandang as string,
+      },
+    });
+    // Hapus data dari database (kandang)
+    const dataKandang = await db.kandang.deleteMany({
+      where: {
+        id_kandang: id_kandang as string,
+      },
+    });
+
+    return NextResponse.json({ dataIot, dataKambing, dataKandang, Message: "Data sensor dan gambar berhasil dihapus." });
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json({ message: "Terjadi kesalahan dalam menghapus data sensor atau gambar." }, { status: 500 });
+  }
 }

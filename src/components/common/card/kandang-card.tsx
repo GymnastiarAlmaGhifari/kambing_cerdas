@@ -32,7 +32,7 @@ const KandangCard: FC<KandangCardProps> = ({ item }) => {
                             </button>
                             <button
                                 className="dark:hover:bg-red-400 dark:focus:bg-red-500 hover:bg-[#01C577] focus:bg-emerald-600 p-2 rounded-full"
-                            // onClick={() => onOpen("editKandang", { kandang: item })}
+                                onClick={() => onOpen("deleteKandang", { idKandang: item.id_kandang })}
                             >
                                 <Trash2 />
                             </button>

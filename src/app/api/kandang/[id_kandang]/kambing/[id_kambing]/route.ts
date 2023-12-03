@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { join } from "path";
 import { writeFile, unlink } from "fs/promises";
 import { v4 as uuidv4 } from "uuid";

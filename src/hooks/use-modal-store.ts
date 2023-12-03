@@ -22,6 +22,12 @@ export type terimaData = {
   keterangan?: string | null;
 };
 
+export type alat = {
+  id_dht22?: string | null;
+  id_kandang?: string | null;
+  nama_kandang?: string | null;
+};
+
 export type ModalType = "createKandang" | "createKambing" | "createSensor" | "createNotif" | "editKandang" | "editKambing" | "editSensor" | "deleteKandang" | "deleteKambing" | "deleteSensor" | "terima" | "tolak" | "deleteUser";
 
 interface ModalData {
@@ -31,6 +37,7 @@ interface ModalData {
   idKandang?: string;
   idKambing?: string;
   dataModal?: dataModal;
+  alat?: alat;
   terimaData?: terimaData;
   sensor?: DataDht;
   apiUrl?: string;

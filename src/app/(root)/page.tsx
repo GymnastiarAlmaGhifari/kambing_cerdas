@@ -10,14 +10,14 @@ import { useEffect } from 'react';
 import Landing from '@/components/shared/Landing';
 
 export default function Home() {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
 
   const router = useRouter();
   const pathname = usePathname();
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      {
+      {/* {
         session?.user ? (
           // logout button 
           <div className='flex flex-row gap-3'>
@@ -49,7 +49,7 @@ export default function Home() {
             Sign in
           </Link>
         )
-      }
+      } */}
       <Landing />
     </main>
   )

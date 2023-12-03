@@ -116,7 +116,9 @@ const KambingCard: FC<KambingCardProps> = ({ item }) => {
                                         <OpenModal isOpen={'editKambing'} text='Edit' icon={<Pencil size={20} strokeWidth={3} />}
                                             dataModal={{ idKandang: item.id_kandang, idKambing: items.id_kambing, imageKambing: items.gambar_kambing, namaKambing: items.nama_kambing, rfid: items.rfid, dateKambing: items.tanggal_lahir }}
                                             variant={'secondary'} className='w-full rounded-xl' />
-                                        <OpenModal isOpen={'deleteKambing'} text='Delete' icon={<Trash2 size={20} strokeWidth={3} />} dataModal={{ idKandang: item.id_kandang, idKambing: items.id_kambing }} variant={'destructive'} className='w-full rounded-xl' />
+                                        <OpenModal isOpen={'deleteKambing'} text='Delete' icon={<Trash2 size={20} strokeWidth={3} />}
+                                            id_kambing={items.id_kambing}
+                                            variant={'destructive'} className='w-full rounded-xl' />
 
                                     </div>
 

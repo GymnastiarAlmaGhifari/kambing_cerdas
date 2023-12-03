@@ -15,7 +15,7 @@ import { useModal } from "@/hooks/use-modal-store";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-export const DeleteKambingModal = () => {
+export const DeleteKandangModal = () => {
     const { isOpen, onClose, type, data } = useModal();
     const router = useRouter();
     const queryClient = useQueryClient();
@@ -23,24 +23,24 @@ export const DeleteKambingModal = () => {
     // set error string
     const [error, setError] = useState<string | null>(null);
 
-    const isModalOpen = isOpen && type === "deleteKambing";
+    const isModalOpen = isOpen && type === "deleteKandang";
 
-    const { idKambing } = data;
+    const { idKandang } = data;
 
     const onSubmit = async () => {
 
 
         const responseDelete = {
-            id_kambing: idKambing,
+            id_kandang: idKandang,
 
         };
 
         try {
-            const deleteResponse = await axios.delete(`/api/kambing`, { data: responseDelete });
+            const deleteResponse = await axios.delete(`/api/kandang`, { data: responseDelete });
             console.log(deleteResponse);
 
 
-            queryClient.invalidateQueries(["kambing"]);
+            queryClient.invalidateQueries(["kandang"]);
 
             onClose();
 
@@ -65,13 +65,13 @@ export const DeleteKambingModal = () => {
             <DialogContent className="bg-neutral-100 dark:bg-dark-5 dark:text-light-2 text-black p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-2xl text-center font-bold">
-                        Hapus Domba
+                        Hapus Kandang
                     </DialogTitle>
                 </DialogHeader>
 
                 <DialogDescription
                     className="px-6 pb-8 text-neutral-500 dark:text-neutral-400 text-center">
-                    Apakah Anda yakin ingin menghapus Domba ini?
+                    Apakah Anda yakin ingin menghapus kandang ini?
                 </DialogDescription>
 
                 <DialogFooter className="px-6 pb-8">
