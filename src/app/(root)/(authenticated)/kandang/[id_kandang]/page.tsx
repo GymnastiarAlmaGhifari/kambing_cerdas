@@ -5,6 +5,9 @@ import { Plus } from 'lucide-react'
 import { db } from '@/lib/db'
 import React, { FC } from 'react'
 import OpenModal from '@/components/common/button/OpenModal'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import { redirect } from 'next/navigation'
 // import { useModal } from "@/hooks/use-modal-store";
 
 interface pageKandangId {
@@ -34,6 +37,13 @@ const DetailKandang: FC<pageKandangId> = async ({ params }) => {
 
     console.log(params.id_kandang)
 
+    const session = await getServerSession(authOptions)
+
+    // jika session?.user.role = "user" alihakan ke path /
+    if (session?.user.role !== "owner" && session?.user.role !== "pekerja") {
+        redirect('/')
+    }
+
 
     return (
         <>
@@ -46,8 +56,6 @@ const DetailKandang: FC<pageKandangId> = async ({ params }) => {
                     item={{ id_kandang: detailKandang?.id_kandang || "", nama_kandang: detailKandang?.nama_kandang || "" }}
                 />
             </section>
-
-
         </>
     )
 }

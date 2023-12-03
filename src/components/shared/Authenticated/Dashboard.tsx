@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 
 import Humidity from '@/components/common/chart/humidity';
 import Temperature from '@/components/common/chart/temperature'
@@ -12,16 +12,13 @@ import { useRouter } from 'next/navigation';
 
 const DashboardComponent = () => {
 
-    const [selectedDate, setSelectedDate] = React.useState('sejam');
-    const { data: session } = useSession();
-
-
-
-
+    const [selectedDate, setSelectedDate] = useState('sejam');
 
     const handleDateChange = useCallback((event: any) => {
         setSelectedDate(event.target.value);
     }, []);
+
+
     const { data: kandangDashboard, isLoading, isError } = useQuery({
         queryKey: ['kandangDashbaord'],
         queryFn: async () => {
@@ -34,9 +31,6 @@ const DashboardComponent = () => {
     return (
         <div className='text-white '>
             <h1 className='text-heading2-semibold dark:text-light-2 text-[#00A762] '>Dashboard</h1>
-            <h1>
-                {session?.user.role}
-            </h1>
             <label htmlFor="dateSelector" className="dark:text-light-2 text-[#00A762]">
                 Pilih Waktu:
                 <select

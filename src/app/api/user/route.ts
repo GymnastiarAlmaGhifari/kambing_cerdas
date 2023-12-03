@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { hash } from "bcrypt";
+import { userRole } from "@prisma/client";
 
 export async function POST(req: Request) {
   try {
@@ -35,6 +36,37 @@ export async function POST(req: Request) {
 
     const { password: newUserPassword, ...rest } = newUser;
     return NextResponse.json({ user: rest, message: "User created Successfully" }, { status: 201 });
+  } catch (error) {
+    return NextResponse.json({ message: "Something went wrong!" }, { status: 500 });
+  }
+}
+
+// get user
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+
+    const role = searchParams.get("role");
+
+    const user = await db.user.findMany({
+      where: { role: role as userRole },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        role: true,
+        name: true,
+        image: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ user: null, message: "User not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ user, message: "User found" }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: "Something went wrong!" }, { status: 500 });
   }

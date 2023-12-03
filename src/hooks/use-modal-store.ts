@@ -22,7 +22,7 @@ export type terimaData = {
   keterangan?: string | null;
 };
 
-export type ModalType = "createKandang" | "createKambing" | "createSensor" | "createNotif" | "editKandang" | "editKambing" | "editSensor" | "deleteKandang" | "deleteKambing" | "deleteSensor" | "terima" | "tolak";
+export type ModalType = "createKandang" | "createKambing" | "createSensor" | "createNotif" | "editKandang" | "editKambing" | "editSensor" | "deleteKandang" | "deleteKambing" | "deleteSensor" | "terima" | "tolak" | "deleteUser";
 
 interface ModalData {
   notif?: notifications;
