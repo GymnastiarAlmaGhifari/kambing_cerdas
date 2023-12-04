@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -8,7 +8,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../../ui/form';
+} from "../../ui/form";
 import {
   Card,
   CardContent,
@@ -16,19 +16,18 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../ui/card"
-import * as z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '../../ui/input';
-import { Button } from '../../ui/button';
-import Link from 'next/link';
+} from "../../ui/card";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { signIn } from 'next-auth/react';
-import { registerValidation } from '@/lib/validations/user-validation';
-import { useState } from 'react';
+import { signIn } from "next-auth/react";
+import { registerValidation } from "@/lib/validations/user-validation";
+import { useState } from "react";
 import axios, { AxiosError } from "axios";
-
-
+import Image from "next/image";
 
 const SignUpForm = () => {
   const router = useRouter();
@@ -40,10 +39,10 @@ const SignUpForm = () => {
   const form = useForm<z.infer<typeof registerValidation>>({
     resolver: zodResolver(registerValidation),
     defaultValues: {
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
@@ -52,17 +51,16 @@ const SignUpForm = () => {
       email: values.email,
       username: values.username,
       password: values.password,
-      pathname: pathname
+      pathname: pathname,
     };
     try {
-
-      const response = await axios.post('/api/user', responseData);
+      const response = await axios.post("/api/user", responseData);
       // Cek jika response memiliki properti 'error'
       if (response.data.error) {
         setError(response.data.error);
       } else {
         // Jika tidak ada error, redirect ke halaman sign in
-        router.push('/sign-in');
+        router.push("/sign-in");
       }
     } catch (error) {
       const errorMessage = error as string;
@@ -73,82 +71,38 @@ const SignUpForm = () => {
         } else if (password) {
           setError(password);
         } else {
-          setError('Something went wrong');
+          setError("Something went wrong");
         }
       }
     }
   };
 
-  const loginWithGoogle = () => signIn('google', { callbackUrl: '/' })
+  const loginWithGoogle = () => signIn("google", { callbackUrl: "/" });
 
   return (
-    <Card>
+    <Card className="bg-[#1C1917] w-[400px] h-fit border-none">
       <CardHeader className="space-y-1 text-center">
-        <CardTitle className="text-2xl ">Sign Up</CardTitle>
-        <CardDescription className=''>
+        <CardTitle className="text-[24px] text-center text-light-1">
+          Sign Up
+        </CardTitle>
+        {/* <CardDescription className=''>
           Welcome! Please fill in the information below to create an account.
-        </CardDescription>
+        </CardDescription> */}
       </CardHeader>
       <CardContent className="grid gap-4">
-        <div className="grid grid-cols-2 gap-6">
-          <Button variant="outline">
-            {/* <Icons.gitHub className="mr-2 h-4 w-4" /> */}
-            Github
-          </Button>
-          <Button variant="outline" onClick={loginWithGoogle}>
-            {/* <Icons.google className="mr-2 h-4 w-4" /> */}
-            Google
-          </Button>
-        </div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='w-full'>
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  Or continue with
-                </span>
-              </div>
-            </div>
-            <div className='space-y-2'>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+            <div className="space-y-4">
               <FormField
                 control={form.control}
-                name='username'
+                name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
-                    <FormControl>
-                      <Input placeholder='johndoe' {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='email'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder='mail@example.com' {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='password'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    {/* <FormLabel>Username</FormLabel> */}
                     <FormControl>
                       <Input
-                        type='password'
-                        placeholder='Enter your password'
+                        className="bg-[#262626] h-16 border-none"
+                        placeholder="johndoe"
                         {...field}
                       />
                     </FormControl>
@@ -158,14 +112,50 @@ const SignUpForm = () => {
               />
               <FormField
                 control={form.control}
-                name='confirmPassword'
+                name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Re-Enter your password</FormLabel>
+                    {/* <FormLabel>Email</FormLabel> */}
+                    <FormControl>
+                      <Input 
+                        className="bg-[#262626] h-16 border-none"
+                        placeholder="mail@example.com"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    {/* <FormLabel>Password</FormLabel> */}
                     <FormControl>
                       <Input
-                        placeholder='Re-Enter your password'
-                        type='password'
+                        className="bg-[#262626] h-16 border-none"
+                        type="password"
+                        placeholder="Enter your password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    {/* <FormLabel>Re-Enter your password</FormLabel> */}
+                    <FormControl>
+                      <Input
+                        className="bg-[#262626] h-16 border-none"
+                        placeholder="Re-Enter your password"
+                        type="password"
                         {...field}
                       />
                     </FormControl>
@@ -174,19 +164,50 @@ const SignUpForm = () => {
                 )}
               />
             </div>
-            <div className="text-2xl">
-              {error}
-            </div>
-            <Button variant={'default'} className='w-full mt-6' type='submit'>
+            <div className="text-2xl">{error}</div>
+            <span className="mt-4 h2 block w-1/3 border-t-2"></span>
+            <Button
+              variant={"destructive"}
+              className="w-full mt-6"
+              type="submit"
+            >
               Sign up
             </Button>
           </form>
         </Form>
+        <div className="relative flex gap-3 ">
+          <span className="mt-4 h2 block w-full border-t-2"></span>
+          <span className="block p-1 rounded-md border-2 text-light-1 text-base-regular">
+            OR
+          </span>
+          <span className="mt-4 h2 block w-full border-t-2"></span>
+        </div>
+        <div className="flex justify-center mt-4">
+          {/* <Button variant="outline">
+            <Icons.gitHub className="mr-2 h-4 w-4" />
+            Github
+          </Button> */}
+          <Button
+            variant="outline"
+            className="h-16 w-16 rounded-full"
+            onClick={loginWithGoogle}
+          >
+            {/* <Icons.google className="mr-2 h-4 w-4" /> */}
+            {/* Google
+             */}
+            <Image
+              alt=""
+              src="/assets/loginGoogle.svg"
+              width={200}
+              height={200}
+            />
+          </Button>
+        </div>
       </CardContent>
       <CardFooter>
-        <p className='text-center text-sm text-gray-600 '>
+        <p className="text-center text-sm text-gray-600 ">
           If you already have an account, please&nbsp;
-          <Link className='text-blue-500 hover:underline' href='/sign-in'>
+          <Link className="text-blue-500 hover:underline" href="/sign-in">
             Sign in
           </Link>
         </p>
@@ -196,7 +217,6 @@ const SignUpForm = () => {
 };
 
 export default SignUpForm;
-
 
 // const response = await fetch('api/user', {
 //   method: 'POST',

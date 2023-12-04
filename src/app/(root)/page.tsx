@@ -1,13 +1,13 @@
-"use client"
-import Image from 'next/image'
-import { useSession } from 'next-auth/react';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
-import { buttonVariants } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
-import { signOut } from 'next-auth/react';
-import { useEffect } from 'react';
-import Landing from '@/components/shared/Landing';
+"use client";
+import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
+import { useEffect } from "react";
+import Landing from "@/components/shared/Landing";
 
 export default function Home() {
   // const { data: session } = useSession();
@@ -16,7 +16,7 @@ export default function Home() {
   const pathname = usePathname();
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="">
       {/* {
         session?.user ? (
           // logout button 
@@ -52,5 +52,5 @@ export default function Home() {
       } */}
       <Landing />
     </main>
-  )
+  );
 }
