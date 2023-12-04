@@ -3,7 +3,7 @@
 import { FC, useEffect } from 'react'
 import Image from "next/image";
 import Link from "next/link";
-import { ModeToggle } from '../common/ThemeSetting';
+import { ModeToggle } from '../../common/ThemeSetting';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 

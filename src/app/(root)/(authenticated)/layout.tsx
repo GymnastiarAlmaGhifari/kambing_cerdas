@@ -7,13 +7,13 @@ import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import Provider from '@/components/providers/auth-provider';
 import { SocketProvider } from '@/components/providers/socket-provider';
-import Topbar from '@/components/shared/Topbar';
-import Leftsidebar from '@/components/shared/Leftsidebar';
-import Rightsidebar from '@/components/shared/Rightsidebar';
-import Bottombar from '@/components/shared/Bottombar';
+import Topbar from '@/components/shared/Authenticated/Topbar';
+import Leftsidebar from '@/components/shared/Authenticated/Leftsidebar';
+import Rightsidebar from '@/components/shared/Authenticated/Rightsidebar';
+import Bottombar from '@/components/shared/Authenticated/Bottombar';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { ModalProvider } from '@/components/providers/modal-provider';
-import Notifikasi from '@/components/shared/Notifikasi';
+import Notifikasi from '@/components/shared/Authenticated/Notifikasi';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 
 

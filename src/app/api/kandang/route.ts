@@ -133,6 +133,27 @@ export async function DELETE(req: NextRequest) {
         id_kandang: id_kandang as string,
       },
     });
+
+    // hapus data dari database (dht22)
+    const dataDht = await db.dataDht.deleteMany({
+      where: {
+        dht22: {
+          kandang: {
+            id_kandang: id_kandang as string,
+          },
+        },
+      },
+    });
+
+    // Hapus data dari database (dht) dan yang datanya yang berkaitan
+    const Dht = await db.dht22.deleteMany({
+      where: {
+        kandang: {
+          id_kandang: id_kandang as string,
+        },
+      },
+    });
+
     // Hapus data dari database (kandang)
     const dataKandang = await db.kandang.deleteMany({
       where: {
@@ -140,7 +161,7 @@ export async function DELETE(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ dataIot, dataKambing, dataKandang, Message: "Data sensor dan gambar berhasil dihapus." });
+    return NextResponse.json({ dataIot, dataKambing, dataKandang, dataDht, Dht, Message: "Data sensor dan gambar berhasil dihapus." });
   } catch (e) {
     console.error(e);
     return NextResponse.json({ message: "Terjadi kesalahan dalam menghapus data sensor atau gambar." }, { status: 500 });

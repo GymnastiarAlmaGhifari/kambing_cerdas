@@ -9,7 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { sidebarLinksPekerja, sidebarLinksOwner } from "@/constants";
 import Logout from './Logout';
 import { signOut, useSession } from 'next-auth/react';
-import { Button, buttonVariants } from '../ui/button';
+import { Button, buttonVariants } from '../../ui/button';
 
 interface LeftsidebarProps {
     // title?: string

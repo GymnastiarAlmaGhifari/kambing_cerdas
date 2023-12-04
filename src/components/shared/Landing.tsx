@@ -2,16 +2,26 @@ import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { Input } from "../ui/input";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 type Props = {};
 
 const Landing = (props: Props) => {
   const [isMenuOpen, setIsOpenMenu] = useState(false);
+  const { data: session } = useSession();
+  const router = useRouter();
+
 
   const toggleMenu = () => {
     setIsOpenMenu(!isMenuOpen);
     console.log(isMenuOpen);
   };
+
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -39,7 +49,7 @@ const Landing = (props: Props) => {
             <div className="flex gap-2 items-center w-fit">
               <div className="w-10 h-10 md:w-16 md:h-16 bg-blue rounded-full"></div>
               <div className="flex flex-col">
-                <p>Lorem ipsum dolor.</p>
+                <p>Domba Cerdas</p>
                 <p>Lorem ipsum.</p>
               </div>
             </div>
@@ -57,9 +67,23 @@ const Landing = (props: Props) => {
                   <li className="text-body-semibold px-4">Tentang Kami</li>
                   <li className="text-body-semibold px-4">Contact</li>
                   <li className="px-4">
-                    <Button variant="destructive" className="w-full">
-                      Sign In
-                    </Button>
+                    {
+                      session?.user ? (
+                        // logout button 
+                        <Button
+                          onClick={() => signOut()}
+                          variant="destructive" className="w-full">
+                          Sign out
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="destructive" className="w-full" >
+                          <Link href='/api/auth/signin'>
+                            Sign in
+                          </Link>
+                        </Button>
+                      )
+                    }
                   </li>
                 </ul>
               )}
@@ -68,9 +92,23 @@ const Landing = (props: Props) => {
               <li className="text-body-semibold px-4">Tentang Kami</li>
               <li className="text-body-semibold px-4">Contact</li>
               <li className="px-4">
-                <Button variant="destructive" className="w-full">
-                  Sign In
-                </Button>
+                {
+                  session?.user ? (
+                    // logout button 
+                    <Button
+                      onClick={() => signOut()}
+                      variant="destructive" className="w-full">
+                      Sign out
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="destructive" className="w-full" >
+                      <Link href='/api/auth/signin'>
+                        Sign in
+                      </Link>
+                    </Button>
+                  )
+                }
               </li>
             </ul>
             {/* </div> */}
@@ -86,9 +124,39 @@ const Landing = (props: Props) => {
                   dengan menggunakan berbagai sensor untuk meningkatkan
                   efisiensi peternakan kambing.
                 </p>
-                <Button variant="destructive" className="w-fit">
-                  Mulai
-                </Button>
+                {
+                  session?.user ? (
+                    // logout button 
+                    <div className='flex flex-row gap-3'>
+                      <Button
+                        onClick={() => signOut()}
+                        variant="destructive" className="w-fit">
+                        Sign out
+                      </Button>
+                      {
+                        session?.user.role === 'owner' || session?.user.role === 'pekerja' ? (
+                          <Button
+                            variant="destructive" className="w-fit"
+                            onClick={() => {
+                              router.push('/dashboard')
+                            }}
+                          >
+                            dashboard
+                          </Button>) : (
+                          <>
+                          </>
+                        )
+                      }
+                    </div>
+                  ) : (
+                    <Button
+                      variant="destructive" className="w-fit" >
+                      <Link href='/api/auth/signin'>
+                        Sign in
+                      </Link>
+                    </Button>
+                  )
+                }
               </div>
             </div>
           </header>
@@ -102,7 +170,7 @@ const Landing = (props: Props) => {
             className="w-full h-full absolute object-cover"
           />
         </div>
-      </div>
+      </div >
       <div className="px-16 py-12 bg-black text-light-1 flex flex-col lg:flex-row gap-10">
         <section className="flex flex-col gap-4 w-full">
           <h1 className="text-heading2-bold md:text-heading1-bold">
