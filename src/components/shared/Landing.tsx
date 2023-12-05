@@ -47,10 +47,11 @@ const Landing = (props: Props) => {
           <nav className="flex items-center justify-between w-full py-4 sticky top-0 backdrop-blur-lg px-16 text-light-1">
             {/* <div className="w-full flex justify-between text-light-1 items-center px-16"> */}
             <div className="flex gap-2 items-center w-fit">
-              <div className="w-10 h-10 md:w-16 md:h-16 bg-blue rounded-full"></div>
+              <div className="w-10 h-10 md:w-20 md:h-20" style={{ backgroundImage: 'url(/kumo.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+              </div>
               <div className="flex flex-col">
                 <p>Domba Cerdas</p>
-                <p>Lorem ipsum.</p>
+                <p>Sarang Farm</p>
               </div>
             </div>
             <div className="relative md:hidden">

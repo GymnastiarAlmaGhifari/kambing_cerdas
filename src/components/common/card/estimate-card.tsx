@@ -69,26 +69,41 @@ const EstimateCard: FC<EstimateCardProps> = (
                                                     />
                                                 </div>
                                             </div>
-                                            <div className="">
-                                                <h1 className='text-heading4-medium'>
-                                                    Prediksi Bobot Masa Depan
-                                                </h1>
-                                                <ul className='ml-0.5'>
-                                                    {item.deskripsi.split('|').map((desc: string, index: number) => {
-                                                        const [bulan, nilai] = desc.trim().split(':');
-                                                        const parsedNilai = parseFloat(nilai);
+                                            <div className="flex flex-row gap-2 justify-around">
+                                                <div className="">
+                                                    <h1 className='text-heading4-medium'>
+                                                        Prediksi Bobot Masa Depan
+                                                    </h1>
+                                                    <ul className='ml-0.5'>
+                                                        {item.deskripsi.split('|').map((desc: string, index: number) => {
+                                                            const [bulan, nilai] = desc.trim().split(':');
+                                                            const parsedNilai = parseFloat(nilai);
 
-                                                        if (isNaN(parsedNilai)) {
-                                                            return null; // or handle the error in another way
-                                                        }
+                                                            if (isNaN(parsedNilai)) {
+                                                                return null; // or handle the error in another way
+                                                            }
 
-                                                        return (
-                                                            <li key={index}>
-                                                                {`${bulan}: ${parsedNilai.toFixed(2)}`}
-                                                            </li>
-                                                        );
-                                                    })}
-                                                </ul>
+                                                            return (
+                                                                <li key={index}>
+                                                                    {`${bulan}: ${parsedNilai.toFixed(2)}`}
+                                                                </li>
+                                                            );
+                                                        })}
+                                                    </ul>
+                                                </div>
+                                                <div className="flex flex-col gap-3">
+                                                    {/* <h1>
+                                                        <span className='text-heading4-medium'>
+                                                            Standart
+                                                        </span>  : {item.standart.toFixed(2) + ' Kg'}
+                                                    </h1> */}
+                                                    <h1>
+                                                        <span className='text-heading4-medium'>
+                                                            Keterangan Kondisi : {" "}
+                                                        </span>
+                                                        {item.keterangan}
+                                                    </h1>
+                                                </div>
                                             </div>
                                             <div className="flex flex-row justify-end items-center w-full mt-4 gap-3">
                                                 <OpenModal
