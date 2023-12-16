@@ -72,7 +72,9 @@ const Landing = (props: Props) => {
                       session?.user ? (
                         // logout button 
                         <Button
-                          onClick={() => signOut()}
+                          onClick={() => signOut(
+                            { callbackUrl: 'https://dombacerdas.gymnastiarag.my.id/' }
+                          )}
                           variant="destructive" className="w-full">
                           Sign out
                         </Button>
@@ -97,7 +99,9 @@ const Landing = (props: Props) => {
                   session?.user ? (
                     // logout button 
                     <Button
-                      onClick={() => signOut()}
+                      onClick={() => signOut(
+                        { callbackUrl: 'https://dombacerdas.gymnastiarag.my.id/' }
+                      )}
                       variant="destructive" className="w-full">
                       Sign out
                     </Button>
@@ -130,8 +134,9 @@ const Landing = (props: Props) => {
                     // logout button 
                     <div className='flex flex-row gap-3'>
                       <Button
-                        onClick={() => signOut()}
-                        variant="destructive" className="w-fit">
+                        onClick={() => signOut(
+                          { callbackUrl: 'https://dombacerdas.gymnastiarag.my.id/' }
+                        )} variant="destructive" className="w-fit">
                         Sign out
                       </Button>
                       {
@@ -162,15 +167,15 @@ const Landing = (props: Props) => {
             </div>
           </header>
         </section>
-        <div className="w-full h-full  overflow-clip relative z-[-1]">
-          <Image
-            alt="gambar domba"
-            src="/assets/illustration.png"
-            height={1000}
-            width={1000}
-            className="w-full h-full absolute object-cover"
-          />
-        </div>
+        {/* <div className="w-full h-full bg-dark-4 overflow-clip relative z-[-1]"> */}
+        <Image
+          alt="gambar domba"
+          src="/assets/illustration.png"
+          height={1000}
+          width={1000}
+          className="w-full h-full absolute object-cover overflow-clip  z-[-1]"
+        />
+        {/* </div> */}
       </div >
       <div className="px-16 py-12 bg-black text-light-1 flex flex-col lg:flex-row gap-10">
         <section className="flex flex-col gap-4 w-full">

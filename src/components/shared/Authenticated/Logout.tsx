@@ -7,6 +7,7 @@ const Logout = () => {
     return (
         <Button onClick={() => signOut({
             redirect: true,
+            callbackUrl: "https://dombacerdas.gymnastiarag.my.id/"
         })} variant={"destructive"}>
             Sign Out
         </Button>
