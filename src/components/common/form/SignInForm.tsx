@@ -142,25 +142,7 @@ const SignInForm = () => {
           </span>
           <span className="mt-4 h2 block w-full border-t-2"></span>
         </div>
-        <div className="flex justify-center mt-4">
-          {/* <Button variant="outline">
-            <Icons.gitHub className="mr-2 h-4 w-4" />
-            Github
-          </Button> */}
-          <Button
-            variant="outline"
-            className="h-16 w-16 rounded-full"
-            onClick={loginWithGoogle}
-          >
-            {/* <Icons.google className="mr-2 h-4 w-4" /> */}
-            <Image
-              alt=""
-              src="/assets/loginGoogle.svg"
-              width={200}
-              height={200}
-            />
-          </Button>
-        </div>
+
       </CardContent>
       <CardFooter>
         <p className="text-center text-sm text-gray-600 ">
@@ -175,3 +157,24 @@ const SignInForm = () => {
 };
 
 export default SignInForm;
+
+
+// <div className="flex justify-center mt-4">
+//   {/* <Button variant="outline">
+//     <Icons.gitHub className="mr-2 h-4 w-4" />
+//     Github
+//   </Button> */}
+//   <Button
+//     variant="outline"
+//     className="h-16 w-16 rounded-full"
+//     onClick={loginWithGoogle}
+//   >
+//     {/* <Icons.google className="mr-2 h-4 w-4" /> */}
+//     <Image
+//       alt=""
+//       src="/assets/loginGoogle.svg"
+//       width={200}
+//       height={200}
+//     />
+//   </Button>
+// </div>

@@ -162,10 +162,10 @@ const Landing = (props: Props) => {
             </div>
           </header>
         </section>
-        <div className="w-full h-full bg-lime-50 overflow-clip relative z-[-1]">
+        <div className="w-full h-full  overflow-clip relative z-[-1]">
           <Image
-            alt=""
-            src="/assets/illustration.svg"
+            alt="gambar domba"
+            src="/assets/illustration.png"
             height={1000}
             width={1000}
             className="w-full h-full absolute object-cover"
