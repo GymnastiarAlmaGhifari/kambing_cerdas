@@ -8,6 +8,8 @@ RUN npm ci
 #     npm install -g npm@latest && \
 #     npm install
 COPY . .
+
+RUN apt-get update -y && apt-get install -y openssl
 RUN npx prisma generate
 RUN npm run build
 
