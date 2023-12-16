@@ -15,6 +15,8 @@ RUN npm run build
 
 FROM node:20-slim AS runner
 
+RUN apt-get update -y && apt-get install -y openssl
+
 WORKDIR /app
 COPY --from=builder /app/package.json .
 COPY --from=builder /app/package-lock.json .
