@@ -167,15 +167,15 @@ const Landing = (props: Props) => {
             </div>
           </header>
         </section>
-        {/* <div className="w-full h-full bg-dark-4 overflow-clip relative z-[-1]"> */}
-        <Image
+        <div className="w-full h-full bg-dark-4 overflow-clip relative z-[-1]">
+          {/* <Image
           alt="gambar domba"
           src="/assets/illustration.png"
           height={1000}
           width={1000}
           className="w-full h-full absolute object-cover overflow-clip  z-[-1]"
-        />
-        {/* </div> */}
+        /> */}
+        </div>
       </div >
       <div className="px-16 py-12 bg-black text-light-1 flex flex-col lg:flex-row gap-10">
         <section className="flex flex-col gap-4 w-full">
