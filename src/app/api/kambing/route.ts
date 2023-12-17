@@ -11,7 +11,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ message: "Parameter id_kambing diperlukan." }, { status: 400 });
     }
 
-    const semuaGambarIot = await db.iOTImageProcessing.findMany({
+    const semuaGambarIot = await db.iotimageprocessing.findMany({
       where: {
         id_kambing: id_kambing as string,
       },
@@ -44,7 +44,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     // Hapus data dari database (iotimage)
-    const dataIot = await db.iOTImageProcessing.deleteMany({
+    const dataIot = await db.iotimageprocessing.deleteMany({
       where: {
         id_kambing: id_kambing as string,
       },

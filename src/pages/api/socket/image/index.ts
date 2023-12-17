@@ -76,7 +76,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
     const filename = nameFile(id as string);
 
     // Mengisi imagePath dengan nama file
-    const estimateData = await db.cartImageProcessing.create({
+    const estimateData = await db.cartimageprocessing.create({
       data: {
         imagePath: filename,
         id_kambing: id as string,

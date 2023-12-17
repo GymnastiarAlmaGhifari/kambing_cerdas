@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
   try {
     let estimateData: CartImageProcessing[] = [];
 
-    estimateData = await db.cartImageProcessing.findMany({
+    estimateData = await db.cartimageprocessing.findMany({
       select: {
         id: true,
         usia: true,
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     }
 
     // buat jika id_kambing dan usia sudah ada maka tidak bisa menambahkan data
-    const dataAda = await db.iOTImageProcessing.findFirst({
+    const dataAda = await db.iotimageprocessing.findFirst({
       where: {
         id_kambing: id_kambing as string,
         usia: usia,
@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
     }
 
     // tambahkan data iotimageprocessing
-    const data = await db.iOTImageProcessing.create({
+    const data = await db.iotimageprocessing.create({
       data: {
         id_kambing: id_kambing as string,
         usia: usia,
@@ -105,7 +105,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ message: "Parameter id_kambing dan usia diperlukan." }, { status: 400 });
     }
 
-    const semuaGambar = await db.cartImageProcessing.findMany({
+    const semuaGambar = await db.cartimageprocessing.findMany({
       where: {
         id_kambing: id_kambing as string,
         usia: parseInt(usia), // Mengasumsikan 'usia' adalah nilai numerik, sesuaikan jika tidak
@@ -116,7 +116,7 @@ export async function DELETE(req: NextRequest) {
     });
 
     // const gambarYang akan dihapus
-    const gambarYangTidakDihapus = await db.cartImageProcessing.findFirst({
+    const gambarYangTidakDihapus = await db.cartimageprocessing.findFirst({
       where: {
         id: id,
         id_kambing: id_kambing as string,
@@ -136,7 +136,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     // Hapus data dari database
-    const data = await db.cartImageProcessing.deleteMany({
+    const data = await db.cartimageprocessing.deleteMany({
       where: {
         id_kambing: id_kambing as string,
         usia: parseInt(usia), // Mengasumsikan 'usia' adalah nilai numerik, sesuaikan jika tidak

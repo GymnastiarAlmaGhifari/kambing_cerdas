@@ -17,7 +17,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     // const gambarYang akan dihapus
-    const gambarYangDihapus = await db.cartImageProcessing.findFirst({
+    const gambarYangDihapus = await db.cartimageprocessing.findFirst({
       where: {
         id: id,
         id_kambing: id_kambing as string,
@@ -33,7 +33,7 @@ export async function DELETE(req: NextRequest) {
     await unlink(pathGambar);
 
     // Hapus data dari database
-    const data = await db.cartImageProcessing.delete({
+    const data = await db.cartimageprocessing.delete({
       where: {
         id: id,
         id_kambing: id_kambing as string,
