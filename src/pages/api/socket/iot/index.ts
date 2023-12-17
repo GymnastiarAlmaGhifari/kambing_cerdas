@@ -57,7 +57,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
     const filename = `${id}.jpeg`;
 
     // Mengisi imagePath dengan nama file
-    const iotImageProcessingData = await db.iOTImageProcessing.create({
+    const iotImageProcessingData = await db.iotimageprocessing.create({
       data: {
         imagePath: filename,
         id_kambing: id as string,

@@ -73,7 +73,7 @@ export async function DELETE(req: NextRequest) {
       },
     });
 
-    const semuaGambarIot = await db.iOTImageProcessing.findMany({
+    const semuaGambarIot = await db.iotimageprocessing.findMany({
       where: {
         kambing: {
           kandang: {
@@ -118,7 +118,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     // Hapus data dari database (iotimage)
-    const dataIot = await db.iOTImageProcessing.deleteMany({
+    const dataIot = await db.iotimageprocessing.deleteMany({
       where: {
         kambing: {
           kandang: {

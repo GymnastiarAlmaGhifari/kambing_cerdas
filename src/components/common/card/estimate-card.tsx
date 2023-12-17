@@ -41,6 +41,8 @@ const EstimateCard: FC<EstimateCardProps> = (
                 <p>Loading...</p>
             ) : status === "error" ? (
                 <p>Error loading data</p>
+            ) : !data?.pages || data.pages.length === 0 ? (
+                <div className="empty-data-message">Data masih kosong</div>
             ) : (
                 <>
                     {data?.pages.map((page, pageIndex) => (

@@ -9,7 +9,7 @@ export async function GET(req: Request, { params }: { params: { id_kambing: stri
   const { id_kambing } = params;
 
   try {
-    const kambingData = await db.iOTImageProcessing.findMany({
+    const kambingData = await db.iotimageprocessing.findMany({
       where: { id_kambing: id_kambing },
       select: {
         bobot: true,

@@ -31,7 +31,7 @@ export async function POST(req: Request) {
   try {
     await writeFile(path, buffer);
     console.log(`open ${path} to see the uploaded file`);
-    const iotImageProcessingData = await db.iOTImageProcessing.create({
+    const iotImageProcessingData = await db.iotimageprocessing.create({
       data: {
         imagePath: imagePath,
         // You should specify the relationship to Kambing by using 'kambingId'

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { CartImageProcessing } from "@prisma/client"; // Import model Sensor dari Prisma
+import { cartimageprocessing } from "@prisma/client"; // Import model Sensor dari Prisma
 
 import { useSocket } from "@/components/providers/socket-provider";
 
@@ -23,7 +23,7 @@ export const useCartEstimateSocket = ({ addKey, updateKey, queryKey }: CartImage
   // Di dalam fungsi yang dipanggil saat event "addKey" dari WebSocket muncul
   useEffect(() => {
     if (socket) {
-      const handleAddKey = (estimateData: CartImageProcessing) => {
+      const handleAddKey = (estimateData: cartimageprocessing) => {
         // Tampilkan notifikasi saat ada data baru dari WebSocket
         showNotification("Perhitungan Bobot Baru", { body: `Bobot : ${estimateData.bobot}` });
       };
@@ -66,7 +66,7 @@ export const useCartEstimateSocket = ({ addKey, updateKey, queryKey }: CartImage
     //   });
     // });
 
-    socket.on(addKey, (estimateData: CartImageProcessing) => {
+    socket.on(addKey, (estimateData: cartimageprocessing) => {
       queryClient.setQueryData([queryKey], (oldData: any) => {
         if (!oldData || !oldData.pages || oldData.pages.length === 0) {
           return {

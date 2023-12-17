@@ -95,13 +95,13 @@ model Kambing {
   // Relasi kambing ke kandang
   kandang             Kandang? @relation(fields: [id_kandang], references: [id_kandang])
 
-  // Relasi kambing ke pemrosesan gambar (IOTImageProcessing)
-  iotImageProcessing  IOTImageProcessing[] @relation("KambingToIOTImageProcessing")
-  cartImageProcessing CartImageProcessing[] @relation("KambingToCartImageProcessing")
+  // Relasi kambing ke pemrosesan gambar (iotimageprocessing)
+  iotimageprocessing  iotimageprocessing[] @relation("KambingToiotimageprocessing")
+  cartimageprocessing cartimageprocessing[] @relation("KambingTocartimageprocessing")
   @@map("kambing")
 }
 
-model IOTImageProcessing {
+model iotimageprocessing {
   id               String    @id @default(cuid())
   rfid             String?    @map("rfid")  // Menambahkan field rfid dan mengatur sebagai unique
   imagePath        String
@@ -115,12 +115,12 @@ model IOTImageProcessing {
   id_kambing        String?  // Add id_kambing field
 
   // Relasi pemrosesan gambar ke kambing menggunakan field id_kambing
-  kambing           Kambing?    @relation("KambingToIOTImageProcessing", fields: [id_kambing], references: [id_kambing])
-  @@map("IOTImageProcessing")
+  kambing           Kambing?    @relation("KambingToiotimageprocessing", fields: [id_kambing], references: [id_kambing])
+  @@map("iotimageprocessing")
 }
 
 // cart image processing sementara
-model CartImageProcessing {
+model cartimageprocessing {
   id               String    @id @default(cuid())
   rfid             String?    @map("rfid")  // Menambahkan field rfid dan mengatur sebagai unique
   imagePath        String
@@ -134,8 +134,8 @@ model CartImageProcessing {
   id_kambing        String?  // Add id_kambing field
 
   // Relasi pemrosesan gambar ke kambing menggunakan field id_kambing
-  kambing           Kambing?    @relation("KambingToCartImageProcessing", fields: [id_kambing], references: [id_kambing])
-  @@map("CartImageProcessing")
+  kambing           Kambing?    @relation("KambingTocartimageprocessing", fields: [id_kambing], references: [id_kambing])
+  @@map("cartimageprocessing")
 }
 
 

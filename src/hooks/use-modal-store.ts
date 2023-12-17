@@ -1,4 +1,4 @@
-import { Kandang, DataDht, Kambing, notifications, CartImageProcessing } from "@prisma/client";
+import { Kandang, DataDht, Kambing, notifications, cartimageprocessing } from "@prisma/client";
 import { create } from "zustand";
 
 export type dataModal = {

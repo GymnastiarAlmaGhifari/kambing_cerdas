@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import React, { FC } from 'react'
-import { IOTImageProcessing as iotProcess } from "@prisma/client";
+import { iotimageprocessing as iotProcess } from "@prisma/client";
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Button } from '@/components/ui/button';
@@ -70,6 +70,8 @@ const KambingDetailCard: FC<KambingDetailCardProps> = ({ item }) => {
                             <p className='text-white'>Loading...</p>
                         ) : isError ? (
                             <p>Data Detail Kambing Masih belum tersedia</p>
+                        ) : kambingDetailData.length < 1 ? (
+                            <div className="empty-data-message">Data masih kosong</div>
                         ) : (
                             kambingDetailData.map((items: iotProcess) => (
                                 <div key={items.id} className='flex md:flex-row flex-col gap-5 relative mt-10'>

@@ -18,7 +18,7 @@ interface pageKandangId {
 }
 
 const getDetailKambing = async (id_kambing: string) => {
-    const response = await db.iOTImageProcessing.findFirst({
+    const response = await db.iotimageprocessing.findFirst({
         where: { id_kambing: id_kambing },
         select: {
             id: true,
@@ -38,37 +38,28 @@ const DetailKambing: FC<pageKandangId> = async ({ params }) => {
 
     const detailKambing = await getDetailKambing(params.id_kambing)
 
-    console.log(DetailKambing)
-
-    // const { isOpen, onClose, type } = useModal();
-
-    console.log(params.id_kambing)
-
+    // Redirect if user role is not "owner" or "pekerja"
     const session = await getServerSession(authOptions)
-
-    // jika session?.user.role = "user" alihakan ke path /
     if (session?.user.role !== "owner" && session?.user.role !== "pekerja") {
         redirect('/')
     }
-
 
     return (
         <>
             <h1 className='head-text text-left text-[#00A762] dark:text-light-2'>Hasil Prediksi</h1>
             <section className='mt-9 flex  md:flex-row flex-wrap gap-10 '>
-                <KambingDetailCard
-                    item={
-                        {
+                {detailKambing ? (
+                    <KambingDetailCard
+                        item={{
                             id_kambing: params.id_kambing,
                             id_kandang: detailKambing?.kambing?.id_kandang || "",
                             nama_kambing: detailKambing?.kambing?.nama_kambing || "",
-                        }
-
-                    }
-                />
+                        }}
+                    />
+                ) : (
+                    <div className="empty-data-message">No data available</div>
+                )}
             </section>
-
-
         </>
     )
 }
