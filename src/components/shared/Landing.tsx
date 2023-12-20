@@ -108,7 +108,7 @@ const Landing = (props: Props) => {
                   ) : (
                     <Button
                       variant="destructive" className="w-full" >
-                      <Link href='/api/auth/signin'>
+                      <Link href='sign-in'>
                         Sign in
                       </Link>
                     </Button>
@@ -157,7 +157,7 @@ const Landing = (props: Props) => {
                   ) : (
                     <Button
                       variant="destructive" className="w-fit" >
-                      <Link href='/api/auth/signin'>
+                      <Link href='sign-in'>
                         Sign in
                       </Link>
                     </Button>

@@ -20,14 +20,7 @@ const Leftsidebar: FC<LeftsidebarProps> = ({ }) => {
     const pathname = usePathname();
 
     const router = useRouter();
-    const handleLogout = async () => {
-        await signOut({
-            redirect: true,
-            callbackUrl: '/',
-            // Do not redirect immediately; handle it manually
-        });
-        // Redirect to the sign-in page or any other desired page
-    };
+
 
 
 
@@ -99,7 +92,12 @@ const Leftsidebar: FC<LeftsidebarProps> = ({ }) => {
             <div className='mt-10 px-6'>
 
                 <button
-                    onClick={handleLogout}
+                    onClick={
+                        () =>
+                            signOut({
+                                callbackUrl: "/",
+                            })
+                    }
                     className='flex cursor-pointer gap-4 p-4'>
                     <Image
                         src='/assets/logout.svg'
