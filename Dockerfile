@@ -8,10 +8,14 @@ RUN npm ci
 #     npm install -g npm@latest && \
 #     npm install
 COPY . .
+
+RUN apt-get update -y && apt-get install -y openssl
 RUN npx prisma generate
 RUN npm run build
 
 FROM node:20-slim AS runner
+
+RUN apt-get update -y && apt-get install -y openssl
 
 WORKDIR /app
 COPY --from=builder /app/package.json .
